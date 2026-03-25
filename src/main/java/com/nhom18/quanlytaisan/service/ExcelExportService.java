@@ -12,4 +12,12 @@ public interface ExcelExportService {
      * @return File Excel dưới dạng byte array
      */
     byte[] exportValuationReport(List<Map<String, Object>> valuationData, String sheetName);
+
+    /**
+     * Xuất báo cáo tổng hợp khấu hao theo năm ra định dạng Excel
+     * @param summaryData Dữ liệu tóm tắt khấu hao
+     * @param year Năm báo cáo
+     * @return File Excel dưới dạng byte array
+     */
+    byte[] exportDepreciationSummary(Map<Integer, Map<String, Object>> summaryData, Integer year);
 }

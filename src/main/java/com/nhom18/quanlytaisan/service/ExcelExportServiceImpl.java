@@ -187,4 +187,101 @@ public class ExcelExportServiceImpl implements ExcelExportService {
         style.setDataFormat(workbook.createDataFormat().getFormat("0.00%"));
         return style;
     }
+
+    @Override
+    public byte[] exportDepreciationSummary(Map<Integer, Map<String, Object>> summaryData, Integer year) {
+        try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+
+            Sheet sheet = workbook.createSheet("Tóm Tắt Khấu Hao " + year);
+
+            // Tạo style
+            CellStyle headerStyle = createHeaderStyle(workbook);
+            CellStyle currencyStyle = createCurrencyStyle(workbook);
+            
+            // Row 0: Tiêu đề
+            Row titleRow = sheet.createRow(0);
+            Cell titleCell = titleRow.createCell(0);
+            titleCell.setCellValue("BÁO CÁO TỔNG HỢP KHẤU HAO TÀI SẢN NĂM " + year);
+            CellStyle mainTitleStyle = workbook.createCellStyle();
+            Font mainTitleFont = workbook.createFont();
+            mainTitleFont.setBold(true);
+            mainTitleFont.setFontHeightInPoints((short) 16);
+            mainTitleStyle.setFont(mainTitleFont);
+            titleCell.setCellStyle(mainTitleStyle);
+
+            // Headers
+            String[] headers = {
+                    "Tháng", "Tổng Số TS Khấu Hao", "Tổng Khấu Hao Trong Tháng (VNĐ)", "Tổng Giá Trị Còn Lại (VNĐ)"
+            };
+
+            Row headerRow = sheet.createRow(2);
+            for (int i = 0; i < headers.length; i++) {
+                Cell cell = headerRow.createCell(i);
+                cell.setCellValue(headers[i]);
+                cell.setCellStyle(headerStyle);
+            }
+
+            // Fill data
+            int rowIndex = 3;
+            // Iterate from 1 to 12 logically
+            for (int month = 1; month <= 12; month++) {
+                if (summaryData.containsKey(month)) {
+                    Map<String, Object> monthData = summaryData.get(month);
+                    Row row = sheet.createRow(rowIndex++);
+                    
+                    row.createCell(0).setCellValue("Tháng " + month);
+                    
+                    Cell countCell = row.createCell(1);
+                    setBigDecimalValue(countCell, monthData.get("recordCount"), workbook.createCellStyle()); // Normal format for count
+                    
+                    Cell depCell = row.createCell(2);
+                    setBigDecimalValue(depCell, monthData.get("totalDepreciation"), currencyStyle);
+                    
+                    Cell remainingCell = row.createCell(3);
+                    setBigDecimalValue(remainingCell, monthData.get("totalRemainingValue"), currencyStyle);
+                } else {
+                    // Nếu không có dữ liệu tháng đó thì in ra 0
+                    Row row = sheet.createRow(rowIndex++);
+                    row.createCell(0).setCellValue("Tháng " + month);
+                    row.createCell(1).setCellValue(0);
+                    row.createCell(2).setCellValue(0);
+                    row.createCell(3).setCellValue(0);
+                }
+            }
+
+            // Report info (Tổng cộng trong năm)
+            BigDecimal totalYearDep = BigDecimal.ZERO;
+            for (Map<String, Object> monthData : summaryData.values()) {
+                Object dep = monthData.get("totalDepreciation");
+                if (dep instanceof BigDecimal) {
+                    totalYearDep = totalYearDep.add((BigDecimal) dep);
+                }
+            }
+            
+            rowIndex++; // Bỏ cách 1 dòng
+            Row totalRow = sheet.createRow(rowIndex);
+            Cell totalLabelCell = totalRow.createCell(1);
+            totalLabelCell.setCellValue("Tổng Khấu Hao Cả Năm:");
+            CellStyle boldStyle = workbook.createCellStyle();
+            Font boldFont = workbook.createFont();
+            boldFont.setBold(true);
+            boldStyle.setFont(boldFont);
+            totalLabelCell.setCellStyle(boldStyle);
+
+            Cell totalValueCell = totalRow.createCell(2);
+            setBigDecimalValue(totalValueCell, totalYearDep, currencyStyle);
+            totalValueCell.setCellStyle(currencyStyle); // Ensure currency style and bold
+            
+            // Auto size columns
+            for (int i = 0; i < headers.length; i++) {
+                sheet.autoSizeColumn(i);
+            }
+
+            workbook.write(out);
+            return out.toByteArray();
+
+        } catch (IOException e) {
+            throw new RuntimeException("Lỗi khi tạo file Excel export", e);
+        }
+    }
 }

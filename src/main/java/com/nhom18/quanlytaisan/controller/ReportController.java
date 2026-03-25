@@ -335,6 +335,26 @@ public class ReportController {
         }
     }
 
+    /**
+     * GET /api/reports/depreciation-summary/{year}/export
+     * Xuất tóm tắt khấu hao năm ra file Excel
+     */
+    @GetMapping("/depreciation-summary/{year}/export")
+    public ResponseEntity<byte[]> exportDepreciationSummaryByYear(@PathVariable Integer year) {
+        try {
+            Map<Integer, Map<String, Object>> summary = reportService.getDepreciationSummaryByYear(year);
+            byte[] excelContent = excelExportService.exportDepreciationSummary(summary, year);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
+            headers.setContentDispositionFormData("attachment", "BaoCaoKhauHao_Nam_" + year + "_" + System.currentTimeMillis() + ".xlsx");
+
+            return new ResponseEntity<>(excelContent, headers, HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
     // ============ HELPER METHOD ============
 
     /**

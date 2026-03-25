@@ -118,6 +118,7 @@ Hệ thống Quản lý Tài sản là một ứng dụng web được phát tri
 - Tích hợp biểu đồ Chart.js trực quan (Pie chart, Bar chart)
 - Sửa lỗi mapping JPA Entity `depreciation_history`
 - Export báo cáo định giá sang file Excel với Apache POI
+- Export báo cáo khấu hao sang file Excel với Apache POI
 
 #### 🔄 Chuẩn bị/Đang làm:
 

@@ -41,6 +41,11 @@ class DepreciationReportManager {
     document
       .getElementById("filterYear")
       .addEventListener("change", () => this.handleFilter());
+
+    const btnExport = document.getElementById("btnExportExcel");
+    if (btnExport) {
+      btnExport.addEventListener("click", () => this.handleExportExcel());
+    }
   }
 
   setDefaultYear() {
@@ -165,6 +170,42 @@ class DepreciationReportManager {
     this.renderStats();
     this.renderChart();
     this.renderTable();
+  }
+
+  /**
+   * Handle Export Excel
+   */
+  handleExportExcel() {
+    const year = document.getElementById("filterYear").value;
+    if (!year) {
+      alert("Vui lòng nhập năm để xuất dữ liệu.");
+      return;
+    }
+
+    const btnExport = document.getElementById("btnExportExcel");
+    const originalContent = btnExport.innerHTML;
+
+    // Disable button, show loading
+    btnExport.disabled = true;
+    btnExport.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Đang xử lý...`;
+
+    // Construct download URL
+    const downloadUrl = `${DepreciationReportManager.CONFIG.API_BASE}/depreciation-summary/${year}/export`;
+
+    // Initiate download via hidden iframe or anchor tag
+    const a = document.createElement("a");
+    a.style.display = "none";
+    a.href = downloadUrl;
+
+    // Clean up after download triggers
+    document.body.appendChild(a);
+    a.click();
+
+    setTimeout(() => {
+      document.body.removeChild(a);
+      btnExport.disabled = false;
+      btnExport.innerHTML = originalContent;
+    }, 1500);
   }
 
   /**
