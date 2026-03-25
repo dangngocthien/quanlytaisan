@@ -357,3 +357,120 @@ button:focus {
     border: 1px solid #ccc;
   }
 }
+
+/* ============================================
+   Report Pages - Depreciation & Valuation
+   ============================================ */
+
+/* Statistics Card Styling */
+.stat-card {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  margin-bottom: 1rem;
+  border-left: 4px solid #667eea;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.stat-icon {
+  font-size: 2.5rem;
+  color: #667eea;
+  opacity: 0.8;
+  flex-shrink: 0;
+}
+
+.stat-content h6 {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-content h3 {
+  font-size: 1.8rem;
+  color: #333;
+  margin: 0;
+  font-weight: 700;
+  word-break: break-word;
+}
+
+/* Valuation Card Styling */
+.valuation-card {
+  background: #ffffff;
+  border: none;
+  border-radius: 8px;
+  overflow: hidden;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  height: 100%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.valuation-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.valuation-card-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.valuation-card-body {
+  padding: 1.25rem;
+}
+
+.valuation-card-body small {
+  line-height: 1.6;
+}
+
+/* Valuation Highlight Box */
+.valuation-highlight {
+  background-color: #f0f4ff;
+  border-radius: 4px;
+}
+
+/* Responsive Report Cards */
+@media (max-width: 768px) {
+  .stat-card {
+    margin-bottom: 1rem;
+  }
+
+  .stat-icon {
+    font-size: 2rem;
+  }
+
+  .stat-content h6 {
+    font-size: 0.75rem;
+  }
+
+  .stat-content h3 {
+    font-size: 1.4rem;
+  }
+
+  .valuation-card-body {
+    padding: 1rem;
+  }
+
+  .valuation-card-body small {
+    font-size: 0.8rem;
+  }
+}

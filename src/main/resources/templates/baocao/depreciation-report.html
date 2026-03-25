@@ -1,0 +1,260 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Báo cáo Khấu hao - Hệ thống Quản lý Tài sản</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome Icons -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+
+    <!-- Custom CSS -->
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+  </head>
+  <body>
+    <!-- NAVBAR -->
+    <nav
+      class="navbar navbar-expand-lg navbar-dark"
+      style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+    >
+      <div class="container-fluid">
+        <span class="navbar-brand fw-bold">
+          <i class="fas fa-building"></i> Hệ thống Quản lý Tài sản
+        </span>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/phong-ban" th:href="@{/phong-ban}">
+                <i class="fas fa-door-open"></i> Phòng ban
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/tai-san" th:href="@{/tai-san}">
+                <i class="fas fa-cube"></i> Tài sản
+              </a>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle active"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <i class="fas fa-chart-bar"></i> Báo cáo
+              </a>
+              <ul
+                class="dropdown-menu dropdown-menu-end"
+                aria-labelledby="navbarDropdown"
+              >
+                <li>
+                  <a class="dropdown-item" th:href="@{/baocao/valuation}"
+                    >Báo cáo Định giá</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item active"
+                    th:href="@{/baocao/depreciation}"
+                    >Báo cáo Khấu hao</a
+                  >
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- MAIN CONTAINER -->
+    <div class="container-fluid py-5">
+      <div class="row">
+        <div class="col-12">
+          <!-- HEADER -->
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h2 fw-bold">
+              <i class="fas fa-chart-line"></i> Báo cáo Khấu hao Tài sản
+            </h1>
+          </div>
+
+          <!-- FILTER SECTION -->
+          <div class="card shadow-sm mb-4">
+            <div class="card-body">
+              <div class="row g-3">
+                <div class="col-md-3">
+                  <label for="filterYear" class="form-label fw-semibold">
+                    <i class="fas fa-calendar-alt"></i> Năm
+                    <span class="text-danger">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="filterYear"
+                    placeholder="Nhập năm"
+                    min="2000"
+                  />
+                </div>
+
+                <div class="col-md-3">
+                  <label for="filterMonth" class="form-label fw-semibold">
+                    <i class="fas fa-calendar"></i> Tháng
+                  </label>
+                  <select class="form-select" id="filterMonth">
+                    <option value="">-- Tất cả tháng --</option>
+                    <option value="1">Tháng 1</option>
+                    <option value="2">Tháng 2</option>
+                    <option value="3">Tháng 3</option>
+                    <option value="4">Tháng 4</option>
+                    <option value="5">Tháng 5</option>
+                    <option value="6">Tháng 6</option>
+                    <option value="7">Tháng 7</option>
+                    <option value="8">Tháng 8</option>
+                    <option value="9">Tháng 9</option>
+                    <option value="10">Tháng 10</option>
+                    <option value="11">Tháng 11</option>
+                    <option value="12">Tháng 12</option>
+                  </select>
+                </div>
+
+                <div class="col-md-4">
+                  <label for="filterAsset" class="form-label fw-semibold">
+                    <i class="fas fa-cube"></i> Tài sản
+                  </label>
+                  <select class="form-select" id="filterAsset">
+                    <option value="">-- Tất cả tài sản --</option>
+                  </select>
+                </div>
+
+                <div class="col-md-2 d-flex align-items-end gap-2">
+                  <button class="btn btn-success flex-grow-1" id="btnFilter">
+                    <i class="fas fa-search"></i> Tìm
+                  </button>
+                  <button class="btn btn-secondary flex-grow-1" id="btnReset">
+                    <i class="fas fa-redo"></i> Đặt lại
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- STATISTICS CARDS -->
+          <div class="row mb-4" id="statsContainer"></div>
+
+          <!-- CHART CARD -->
+          <div class="card shadow-sm mb-4">
+            <div class="card-header">
+              <h5 class="mb-0">
+                <i class="fas fa-chart-bar"></i> Biểu đồ Khấu hao theo Tháng
+              </h5>
+            </div>
+            <div class="card-body">
+              <div style="position: relative; height: 400px">
+                <canvas id="depreciationChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- DATA TABLE CARD -->
+          <div class="card shadow-sm">
+            <div class="card-header">
+              <h5 class="mb-0">
+                <i class="fas fa-table"></i> Chi tiết Khấu hao
+              </h5>
+            </div>
+            <div class="card-body p-0">
+              <!-- Loading Spinner -->
+              <div
+                id="loadingSpinner"
+                class="text-center py-5"
+                style="display: none"
+              >
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Đang tải...</span>
+                </div>
+                <p class="text-muted mt-2">Đang tải dữ liệu...</p>
+              </div>
+
+              <!-- Empty State -->
+              <div
+                id="emptyState"
+                class="text-center py-5"
+                style="display: none"
+              >
+                <i class="fas fa-inbox text-muted" style="font-size: 3rem"></i>
+                <p class="text-muted mt-3">Không có dữ liệu khấu hao</p>
+              </div>
+
+              <!-- Data Table -->
+              <table
+                class="table table-hover table-striped mb-0"
+                id="dataTable"
+                style="display: none"
+              >
+                <thead>
+                  <tr>
+                    <th width="5%" class="text-center">STT</th>
+                    <th width="12%">Mã TS</th>
+                    <th width="20%">Tên TS</th>
+                    <th width="12%">Tháng/Năm</th>
+                    <th width="18%" class="text-end">Khấu hao</th>
+                    <th width="18%" class="text-end">Giá trị còn lại</th>
+                    <th width="15%">Ghi chú</th>
+                  </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+              </table>
+            </div>
+
+            <!-- Footer -->
+            <div class="card-footer bg-light">
+              <small class="text-muted">
+                <i class="fas fa-info-circle"></i>
+                Tổng số bản ghi: <strong id="totalRecords">0</strong>
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="text-center py-4 mt-5 text-muted">
+      <p>&copy; 2026 - Hệ thống Quản lý Tài sản | Nhóm 18</p>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Context Path for JS -->
+    <script th:inline="javascript">
+      var contextPath = /*[[@{/}]]*/ "/";
+      if (!contextPath.endsWith("/")) {
+        contextPath += "/";
+      }
+    </script>
+
+    <!-- Report Script -->
+    <script th:src="@{/js/depreciation-report.js}"></script>
+  </body>
+</html>

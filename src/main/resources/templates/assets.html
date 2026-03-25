@@ -50,10 +50,32 @@
                 <i class="fas fa-cube"></i> Tài sản
               </a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
                 <i class="fas fa-chart-bar"></i> Báo cáo
               </a>
+              <ul
+                class="dropdown-menu dropdown-menu-end"
+                aria-labelledby="navbarDropdown"
+              >
+                <li>
+                  <a class="dropdown-item" th:href="@{/baocao/valuation}"
+                    >Báo cáo Định giá</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" th:href="@{/baocao/depreciation}"
+                    >Báo cáo Khấu hao</a
+                  >
+                </li>
+              </ul>
             </li>
           </ul>
         </div>

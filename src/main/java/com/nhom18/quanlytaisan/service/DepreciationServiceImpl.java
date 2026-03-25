@@ -67,9 +67,9 @@ public class DepreciationServiceImpl implements DepreciationService {
         }
 
         // 4. Kiểm tra xem tháng năm này đã tính khấu hao chưa
-        List<DepreciationHistory> existing = depreciationHistoryRepository
+        var existing = depreciationHistoryRepository
                 .findByAsset_IdAndPeriodMonthAndPeriodYear(assetId, month, year);
-        if (!existing.isEmpty()) {
+        if (existing.isPresent()) {
             throw new RuntimeException("Đã tính khấu hao cho tài sản này trong tháng " + month + "/" + year);
         }
 

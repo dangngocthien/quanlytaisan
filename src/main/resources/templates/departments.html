@@ -41,7 +41,11 @@
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto">
             <li class="nav-item">
-              <a class="nav-link active" href="/phong-ban" th:href="@{/phong-ban}">
+              <a
+                class="nav-link active"
+                href="/phong-ban"
+                th:href="@{/phong-ban}"
+              >
                 <i class="fas fa-door-open"></i> Phòng ban
               </a>
             </li>
@@ -50,10 +54,32 @@
                 <i class="fas fa-cube"></i> Tài sản
               </a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
                 <i class="fas fa-chart-bar"></i> Báo cáo
               </a>
+              <ul
+                class="dropdown-menu dropdown-menu-end"
+                aria-labelledby="navbarDropdown"
+              >
+                <li>
+                  <a class="dropdown-item" th:href="@{/baocao/valuation}"
+                    >Báo cáo Định giá</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" th:href="@{/baocao/depreciation}"
+                    >Báo cáo Khấu hao</a
+                  >
+                </li>
+              </ul>
             </li>
           </ul>
         </div>
@@ -100,9 +126,15 @@
                   </thead>
                   <tbody>
                     <tr th:each="dept, stat : ${departments}">
-                      <td class="text-center fw-semibold text-muted" th:text="${stat.count}"></td>
+                      <td
+                        class="text-center fw-semibold text-muted"
+                        th:text="${stat.count}"
+                      ></td>
                       <td>
-                        <span class="badge bg-info" th:text="${dept.code}"></span>
+                        <span
+                          class="badge bg-info"
+                          th:text="${dept.code}"
+                        ></span>
                       </td>
                       <td>
                         <strong th:text="${dept.name}"></strong>
@@ -140,7 +172,10 @@
             <div class="card-footer bg-light">
               <small class="text-muted">
                 <i class="fas fa-info-circle"></i>
-                Tổng số phòng ban: <strong th:text="${departments != null ? departments.size() : 0}"></strong>
+                Tổng số phòng ban:
+                <strong
+                  th:text="${departments != null ? departments.size() : 0}"
+                ></strong>
               </small>
             </div>
           </div>

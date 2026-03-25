@@ -10,13 +10,16 @@ public class DepreciationHistoryDTO {
 
     private Long id;
     private Long assetId;
+    private String assetCode;
     private String assetName;
     private Integer periodMonth;
     private Integer periodYear;
     private BigDecimal depreciationAmount;
     private BigDecimal remainingValue;
+    private BigDecimal purchasePrice;
     private String notes;
     private LocalDateTime calculatedAt;
+    private LocalDateTime createdAt;
 
     // ============ CONSTRUCTORS ============
 
@@ -27,36 +30,42 @@ public class DepreciationHistoryDTO {
     }
 
     /**
-     * Constructor đầy đủ tham số
+     * Constructor đầy đủ tham số (sử dụng trong mapping từ Entity)
      */
-    public DepreciationHistoryDTO(Long id, Long assetId, String assetName,
+    public DepreciationHistoryDTO(Long id, Long assetId, String assetCode, String assetName,
                                   Integer periodMonth, Integer periodYear,
                                   BigDecimal depreciationAmount, BigDecimal remainingValue,
-                                  String notes, LocalDateTime calculatedAt) {
+                                  BigDecimal purchasePrice, String notes,
+                                  LocalDateTime calculatedAt, LocalDateTime createdAt) {
         this.id = id;
         this.assetId = assetId;
+        this.assetCode = assetCode;
         this.assetName = assetName;
         this.periodMonth = periodMonth;
         this.periodYear = periodYear;
         this.depreciationAmount = depreciationAmount;
         this.remainingValue = remainingValue;
+        this.purchasePrice = purchasePrice;
         this.notes = notes;
         this.calculatedAt = calculatedAt;
+        this.createdAt = createdAt;
     }
 
     /**
      * Constructor không có ID (dùng khi tạo mới)
      */
-    public DepreciationHistoryDTO(Long assetId, String assetName,
+    public DepreciationHistoryDTO(Long assetId, String assetCode, String assetName,
                                   Integer periodMonth, Integer periodYear,
                                   BigDecimal depreciationAmount, BigDecimal remainingValue,
-                                  String notes) {
+                                  BigDecimal purchasePrice, String notes) {
         this.assetId = assetId;
+        this.assetCode = assetCode;
         this.assetName = assetName;
         this.periodMonth = periodMonth;
         this.periodYear = periodYear;
         this.depreciationAmount = depreciationAmount;
         this.remainingValue = remainingValue;
+        this.purchasePrice = purchasePrice;
         this.notes = notes;
     }
 
@@ -76,6 +85,14 @@ public class DepreciationHistoryDTO {
 
     public void setAssetId(Long assetId) {
         this.assetId = assetId;
+    }
+
+    public String getAssetCode() {
+        return assetCode;
+    }
+
+    public void setAssetCode(String assetCode) {
+        this.assetCode = assetCode;
     }
 
     public String getAssetName() {
@@ -118,6 +135,14 @@ public class DepreciationHistoryDTO {
         this.remainingValue = remainingValue;
     }
 
+    public BigDecimal getPurchasePrice() {
+        return purchasePrice;
+    }
+
+    public void setPurchasePrice(BigDecimal purchasePrice) {
+        this.purchasePrice = purchasePrice;
+    }
+
     public String getNotes() {
         return notes;
     }
@@ -134,17 +159,28 @@ public class DepreciationHistoryDTO {
         this.calculatedAt = calculatedAt;
     }
 
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
     @Override
     public String toString() {
         return "DepreciationHistoryDTO{" +
                 "id=" + id +
                 ", assetId=" + assetId +
+                ", assetCode='" + assetCode + '\'' +
                 ", assetName='" + assetName + '\'' +
                 ", periodMonth=" + periodMonth +
                 ", periodYear=" + periodYear +
                 ", depreciationAmount=" + depreciationAmount +
                 ", remainingValue=" + remainingValue +
+                ", purchasePrice=" + purchasePrice +
                 ", calculatedAt=" + calculatedAt +
+                ", createdAt=" + createdAt +
                 '}';
     }
 }

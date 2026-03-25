@@ -1,22 +1,41 @@
 # Hệ thống Quản lý Tài sản (Asset Management System)
 
-**Phiên bản:** 0.0.1-SNAPSHOT  
-**Trạng thái:** Đang phát triển (In Development)  
-**Ngôn ngữ:** Tiếng Việt
+**Phiên bản:** 0.0.4-PHASE4 (Phase 4 - Báo cáo Định giá & Khấu hao)  
+**Trạng thái:** Đang phát triển (In Development - Phase 4)  
+**Ngôn ngữ:** Tiếng Việt  
+**Commit hiện tại:** `TBD` - feat: phase 4 - implement valuation and depreciation reports
 
 ---
 
 ## 📋 Tổng quan dự án
 
-Hệ thống Quản lý Tài sản là một ứng dụng web được phát triển để quản lý toàn bộ tài sản của tổ chức/doanh nghiệp. Hệ thống cung cấp các tính năng:
+Hệ thống Quản lý Tài sản là một ứng dụng web được phát triển để quản lý toàn bộ tài sản của tổ chức/doanh nghiệp.
 
-- ✅ Quản lý danh sách tài sản (tạo, xem, sửa, xóa)
-- ✅ Phân loại tài sản theo loại (máy tính, văn phòng, điện tử, v.v.)
-- ✅ Gán tài sản cho phòng ban & nhân viên
-- ✅ Theo dõi trạng thái tài sản (đang sử dụng, bảo trì, thanh lý, v.v.)
-- ✅ Tính toán khấu hao
-- 🔄 Xuất báo cáo & thống kê
-- 🔄 QR Code tra cứu nhanh
+### ✅ Đã Hoàn thành (Completed)
+
+- ✅ **Quản lý Phòng ban:** CRUD đầy đủ (Create, Read, Update, Delete)
+- ✅ **Quản lý Tài sản:** CRUD, theo dõi trạng thái, vị trí hiện tại
+- ✅ **Phân loại tài sản:** Tạo, quản lý danh mục tài sản
+- ✅ **Giao diện web:** Bootstrap 5.3 responsive design
+- ✅ **Database Entities:** Department, Asset, AssetCategory, Employee, DepreciationHistory, AssetTransfer
+- ✅ **Báo cáo Thống kê:** Định giá danh mục, tính khấu hao hàng tháng, biểu đồ trực quan (Chart.js)
+- ✅ **REST API:** Toàn bộ endpoints cho CRUD operations
+- ✅ **Phase 3 - Asset Transfer UI:** Modal form điều chuyển tài sản giữa phòng ban
+- ✅ **Phase 3 - History Table:** Bảng hiển thị lịch sử điều chuyển tài sản
+
+### 🔄 Đang phát triển (In Progress)
+
+- 🔄 **Form Validation:** Client-side & server-side, error messages chi tiết
+- 🔄 **Error Handling:** Professional notifications (Preparing Toastr system)
+- 🔄 **Transfer Logic:** Xử lý logic điều chuyển & lịch sử
+
+### ❌ Chưa bắt đầu (TODO)
+
+- 🔲 **QR Code:** Tra cứu tài sản bằng QR code
+- 🔲 **Upload ảnh:** Lưu trữ & hiển thị ảnh tài sản
+- 🔲 **Excel export:** Xuất dữ liệu sang Excel
+- 🔲 **Authentication:** Login/Logout, phân quyền
+- 🔲 **Báo cáo:** Dashboard & báo cáo chi tiết
 
 ---
 
@@ -30,6 +49,7 @@ Hệ thống Quản lý Tài sản là một ứng dụng web được phát tri
 | **PostgreSQL**      | 12+       | Database chính                          |
 | **Thymeleaf**       | 3.1+      | Template engine (Server-side rendering) |
 | **Bootstrap**       | 5.3.0     | CSS Framework (CDN)                     |
+| **Font Awesome**    | 6.4.0     | Icon library (CDN)                      |
 | **Maven**           | 3.8+      | Build tool                              |
 | **Tomcat**          | 11.0.18   | Application Server                      |
 
@@ -59,6 +79,51 @@ Hệ thống Quản lý Tài sản là một ứng dụng web được phát tri
 ✓ Maven 3.8+
 ✓ Git (tùy chọn)
 ```
+
+---
+
+## 🎯 Trạng thái phát triển theo Phase
+
+### Phase 1: Core CRUD Operations ✅
+
+- Thiết lập project Spring Boot & dependencies
+- Tạo entities & database schema (PostgreSQL)
+- Implement REST API cho Department, Asset, AssetCategory, Employee
+- Tạo web interface cơ bản với Thymeleaf
+
+### Phase 2: UI Enhancement & Asset Management ✅
+
+- Cải thiện UI với Bootstrap 5 responsive design
+- Thêm Font Awesome icons
+- Implement asset detail view & action buttons
+- Add asset filtering & searching capability
+
+### Phase 3: Asset Transfer & History ✅
+
+- Cải thiện UI với form modal điều chuyển tài sản
+- Database schema cho `asset_transfers` (lưu lịch sử điều chuyển)
+- Bảng hiển thị lịch sử điều chuyển tài sản
+- Tích hợp asset movement tracking logic
+
+### Phase 4: Dashboard & Reports (🔄 CURRENT)
+
+**Status:** In Development  
+**Commit:** `TBD` - "feat: phase 4 - implement valuation and depreciation reports"
+
+#### ✅ Đã hoàn thành:
+
+- API & Logic tính toán khấu hao hàng tháng tự động (`/api/depreciation/calculate-all`)
+- Báo cáo định giá danh mục tài sản theo trạng thái/loại (`/api/reports/valuation`)
+- Giao diện Dashboard thống kê báo cáo
+- Tích hợp biểu đồ Chart.js trực quan (Pie chart, Bar chart)
+- Sửa lỗi mapping JPA Entity `depreciation_history`
+
+#### 🔄 Chuẩn bị/Đang làm:
+
+- Professional error handling (Toastr notification system)
+- Cải thiện form validation (client + server)
+- Export báo cáo sang Excel/PDF
+- Tra cứu lịch sử bằng khoảng thời gian
 
 ---
 
@@ -135,6 +200,73 @@ java -jar quanlytaisan-0.0.1-SNAPSHOT.jar
 
 ---
 
+## 🔗 API Endpoints (REST)
+
+### 1. Department (Phòng ban)
+
+```
+GET    /api/departments              - Lấy danh sách toàn bộ phòng ban
+GET    /api/departments/{id}         - Lấy chi tiết phòng ban
+POST   /api/departments              - Tạo phòng ban mới
+PUT    /api/departments/{id}         - Cập nhật thông tin phòng ban
+DELETE /api/departments/{id}         - Xóa phòng ban
+```
+
+### 2. Asset (Tài sản)
+
+```
+GET    /api/assets                   - Lấy danh sách toàn bộ tài sản
+GET    /api/assets/{id}              - Lấy chi tiết tài sản
+POST   /api/assets                   - Tạo tài sản mới
+PUT    /api/assets/{id}              - Cập nhật tài sản
+DELETE /api/assets/{id}              - Xóa tài sản
+```
+
+### 3. Asset Category (Loại tài sản)
+
+```
+GET    /api/asset-categories         - Lấy danh sách loại tài sản
+GET    /api/asset-categories/{id}    - Lấy chi tiết loại tài sản
+POST   /api/asset-categories         - Tạo loại tài sản mới
+PUT    /api/asset-categories/{id}    - Cập nhật loại tài sản
+DELETE /api/asset-categories/{id}    - Xóa loại tài sản
+```
+
+### 4. Asset Transfer (Điều chuyển tài sản) - PHASE 3
+
+```
+GET    /api/asset-transfers          - Lấy lịch sử tất cả điều chuyển
+GET    /api/asset-transfers/{id}     - Lấy chi tiết 1 lần điều chuyển
+POST   /api/asset-transfers          - Ghi nhận điều chuyển mới (Phase 3)
+```
+
+---
+
+## 💾 Hướng dẫn sử dụng
+
+### Quản lý Phòng ban (`/phong-ban`)
+
+1. Click "Thêm phòng ban mới" để mở form
+2. Nhập **Mã Phòng** (unique, VD: IT, HR), **Tên Phòng**, **Mô tả**
+3. Click "Lưu" → dữ liệu được lưu vào database
+4. Sửa/Xóa phòng ban qua action buttons trên bảng
+
+### Quản lý Tài sản (`/tai-san`)
+
+1. Click "Thêm tài sản mới" để mở form
+2. Điền thông tin: mã tài sản, tên, giá trị, loại, phòng ban hiện tại
+3. Click "Lưu" → tài sản được lưu
+4. Xem chi tiết, sửa, xóa, hoặc **Điều chuyển** tài sản
+
+### Điều chuyển Tài sản (Phase 3 Feature)
+
+1. Từ danh sách tài sản, click nút "Điều chuyển"
+2. Mở modal form, chọn **Phòng ban đích**, nhập **Lý do**
+3. Click "Xác nhận" → lưu lịch sử điều chuyển
+4. Xem lịch sử trong bảng "Transfer History" dưới cùng
+
+---
+
 ## 📁 Cấu trúc dự án
 
 ```
@@ -169,21 +301,28 @@ quanlytaisan/
 │   │   │   └── Employee.java
 │   │   ├── dto/
 │   │   │   ├── DepartmentDTO.java                # Data Transfer Object
-│   │   │   ├── AssetDTO.java
+│   │   │   ├── AssetDTO.java                     # Contains asset info & current location
 │   │   │   ├── AssetCategoryDTO.java
-│   │   │   └── EmployeeDTO.java
+│   │   │   ├── EmployeeDTO.java
+│   │   │   ├── AssetTransferDTO.java             # DTO for transfers [Phase 3]
+│   │   │   └── DepreciationHistoryDTO.java       # DTO for depreciation tracking
+│   │   ├── exception/
+│   │   │   └── GlobalExceptionHandler.java       # Centralized error handling
 │   │   └── QuanlytaisanApplication.java          # Main entry point
 │   ├── resources/
-│   │   ├── application.properties                # Cấu hình ứng dụng
+│   │   ├── application.properties                # DB, port, JPA settings
 │   │   ├── templates/
-│   │   │   ├── departments.html                  # Thymeleaf template (Phòng ban)
-│   │   │   └── assets.html                       # Thymeleaf template (Tài sản)
+│   │   │   ├── departments.html                  # Phòng ban - CRUD modal
+│   │   │   ├── assets.html                       # Tài sản - CRUD, transfer [Phase 3]
+│   │   │   ├── baocao/                           # [TODO] Report templates
+│   │   │   └── layouts/                          # [TODO] Shared components
 │   │   └── static/
 │   │       ├── css/
-│   │       │   └── style.css                     # CSS tùy chỉnh
-│   │       └── js/
-│   │           ├── asset.js                      # JavaScript (Module Tài sản)
-│   │           └── department.js                 # JavaScript (Module Phòng ban) [TBD]
+│   │       │   └── style.css                     # Custom Bootstrap overrides
+│   │       ├── js/
+│   │       │   ├── asset.js                      # Asset CRUD & transfer operations
+│   │       │   └── department.js                 # Department CRUD operations
+│   │       └── images/                           # Static assets (logos, etc)
 ├── pom.xml                                        # Maven configuration
 ├── README.md                                      # File này
 └── CHANGELOG.md                                   # Lịch sử thay đổi [TBD]
@@ -301,172 +440,190 @@ quanlytaisan/
 ├──────────────────────────────────┤
 │ id (PK)                          │
 │ asset_id (FK)                    │
-│ period - VARCHAR (YYYY-MM)       │
+│ depreciation_month - INT         │
 │ depreciation_amount - DECIMAL    │
-│ accumulated_depreciation - DECIMAL│
-│ assets_value_after - DECIMAL     │
-│ created_at - TIMESTAMP           │
+│ accumulated_depreciation - DECIMAL
+│ book_value - DECIMAL             │
+│ depreciation_date - DATE         │
 └──────────────────────────────────┘
 ```
 
----
-
-## 📡 API Endpoints (REST API)
-
-### Phòng ban (Departments)
+### Mối quan hệ (Relationships)
 
 ```
-GET     /api/departments               → Lấy danh sách phòng ban
-POST    /api/departments               → Tạo phòng ban mới
-GET     /api/departments/{id}          → Lấy chi tiết phòng ban
-PUT     /api/departments/{id}          → Cập nhật phòng ban
-DELETE  /api/departments/{id}          → Xóa phòng ban
-GET     /api/departments/code/{code}   → Tìm phòng ban theo mã
-```
+departments (1) ──────────── (many) employees
+     │                              │
+     │ (1)                          │ (many)
+     ├───────── (many) assets ──────┘
+     │
+     └─────── (many) asset_transfers
 
-### Tài sản (Assets)
+asset_categories (1) ──────── (many) assets
 
-```
-GET     /api/assets                    → Lấy danh sách tài sản
-POST    /api/assets                    → Tạo tài sản mới
-GET     /api/assets/{id}               → Lấy chi tiết tài sản
-PUT     /api/assets/{id}               → Cập nhật tài sản
-DELETE  /api/assets/{id}               → Xóa tài sản
-GET     /api/assets/code/{code}        → Tìm tài sản theo mã
-GET     /api/assets/category/{catId}   → Lấy tài sản theo loại
-GET     /api/assets/department/{deptId}→ Lấy tài sản theo phòng ban
-GET     /api/assets/status/{status}    → Lấy tài sản theo trạng thái
-```
-
-### Loại tài sản (Asset Categories)
-
-```
-GET     /api/asset-categories          → Lấy danh sách loại tài sản
-POST    /api/asset-categories          → Tạo loại tài sản mới
-GET     /api/asset-categories/{id}     → Lấy chi tiết loại tài sản
-PUT     /api/asset-categories/{id}     → Cập nhật loại tài sản
-DELETE  /api/asset-categories/{id}     → Xóa loại tài sản
-```
-
-### Nhân viên (Employees)
-
-```
-GET     /api/employees                 → Lấy danh sách nhân viên
-POST    /api/employees                 → Tạo nhân viên mới
-GET     /api/employees/{id}            → Lấy chi tiết nhân viên
-PUT     /api/employees/{id}            → Cập nhật nhân viên
-DELETE  /api/employees/{id}            → Xóa nhân viên
-GET     /api/employees/code/{code}     → Tìm nhân viên theo mã
+assets (1) ──────────── (many) maintenance_records
+     │                  (many) depreciation_history
+     │                  (many) asset_transfers
+     │
+     └─ current_department (FK)
+     └─ current_employee (FK)
 ```
 
 ---
 
-## 📝 Quy tắc phát triển (Coding Standards) ⚠️ **BẮT BUỘC**
+## 🎨 UI/UX Design System
 
-### ✅ Quy tắc bắt buộc tuân thủ
+### Color Scheme
 
-#### 1. **TUYỆT ĐỐI KHÔNG dùng Lombok**
+- **Primary:** Purple gradient (#667eea → #764ba2)
+- **Success:** Green (#28a745)
+- **Danger:** Red (#dc3545)
+- **Warning:** Yellow (#ffc107)
+- **Info:** Cyan (#17a2b8)
 
-- ❌ **Không được phép:**
+### Typography
 
-  ```java
-  @Data
-  @Entity
-  public class Department {
-      // ...
-  }
-  ```
+- **Font Family:** Segoe UI, Tahoma, Geneva, Verdana, sans-serif
+- **Body:** 14px/16px
+- **Headings:** 18px - 32px
+- **Icons:** Font Awesome 6.4.0
 
-- ✅ **Bắt buộc viết:**
+### Responsive Breakpoints
 
-  ```java
-  @Entity
-  @Table(name = "departments")
-  public class Department {
-      private Long id;
-      private String code;
-      private String name;
+- Mobile: < 576px
+- Tablet: 576px - 992px
+- Desktop: > 992px
 
-      // Tự viết Constructor
-      public Department() {}
+### Components
 
-      public Department(String code, String name) {
-          this.code = code;
-          this.name = name;
-      }
+- **Navbar:** Gradient purple, fixed-top with navigation
+- **Cards:** Shadow, border-radius 8px, hover effects
+- **Tables:** Hover color, striped rows, responsive
+- **Modals:** Bootstrap 5 modal with form validation
+- **Buttons:** Primary (gradient), secondary, warning, danger
+- **Forms:** Bootstrap form-control with focus effects
 
-      // Tự viết Getter/Setter
-      public Long getId() { return id; }
-      public void setId(Long id) { this.id = id; }
+---
 
-      public String getCode() { return code; }
-      public void setCode(String code) { this.code = code; }
+## 🧪 Testing & Quality Assurance
 
-      // ... tiếp tục cho các field khác
-  }
-  ```
+### Cần thực hiện
 
-#### 2. **Chuyển đổi DTO ↔ Entity hoàn toàn bằng tay**
+- [ ] Unit tests cho Service layer
+- [ ] Integration tests cho API endpoints
+- [ ] UI/UX testing (manual)
+- [ ] Database transaction testing
+- [ ] Error scenario testing
 
-- ❌ **Không được phép:**
+---
 
-  ```java
-  @Autowired
-  private ModelMapper modelMapper;
+## 📝 Lưu ý cho AI Developers
 
-  DepartmentDTO dto = modelMapper.map(entity, DepartmentDTO.class);
-  ```
+### Context Khi Đọc Code
 
-- ✅ **Bắt buộc:**
+1. **Architecture:** MVC Pattern (Model-View-Controller)
+   - Controller = REST API + Web Controllers
+   - Service = Business logic
+   - Repository = Data access (JPA)
+   - Entity = Database models
 
-  ```java
-  public class DepartmentServiceImpl implements DepartmentService {
+2. **Technology Stack:**
+   - Backend: Spring Boot 4.0.4 + Spring Data JPA
+   - Frontend: Thymeleaf templates + Bootstrap 5
+   - Database: PostgreSQL
+   - Build: Maven
 
-      // Private method để mapping Entity → DTO
-      private DepartmentDTO mapEntityToDTO(Department entity) {
-          if (entity == null) return null;
+3. **Current Phase (Phase 3):**
+   - Focus: Asset Transfer UI & History
+   - Main changes: asset_transfers table, transfer modal, history display
+   - Next: Error handling (Toastr), advanced validation
 
-          DepartmentDTO dto = new DepartmentDTO();
-          dto.setId(entity.getId());
-          dto.setCode(entity.getCode());
-          dto.setName(entity.getName());
-          dto.setDescription(entity.getDescription());
-          return dto;
-      }
+4. **UI/UX Pattern:**
+   - Modal forms for CRUD operations
+   - Action buttons (Edit, Delete, Transfer)
+   - Real-time validation feedback
+   - Responsive Bootstrap layout
 
-      // Private method để mapping DTO → Entity
-      private Department mapDTOToEntity(DepartmentDTO dto) {
-          if (dto == null) return null;
+5. **API Convention:**
+   - RESTful endpoints: `/api/{resource}`
+   - Request: JSON body
+   - Response: JSON (data or error)
+   - HTTP methods: GET, POST, PUT, DELETE
 
-          Department entity = new Department();
-          entity.setCode(dto.getCode());
-          entity.setName(dto.getName());
-          entity.setDescription(dto.getDescription());
-          return entity;
-      }
-  }
-  ```
+### Common Issues
 
-#### 3. **Dùng Constructor Injection (KHÔNG dùng @Autowired trên field)**
+- DB connection: Check application.properties (postgresql URL, credentials)
+- UI not loading: Check Thymeleaf templates & CDN links (Bootstrap, Font Awesome)
+- API not working: Check controller mappings & service implementations
+- Form errors: See browser console & application.properties logging
 
-- ❌ **Không được phép:**
+### File to Read First
 
-  ```java
-  @Service
-  public class DepartmentServiceImpl implements DepartmentService {
-      @Autowired
-      private DepartmentRepository repository;
+1. **README.md** - Overview & setup (you are here!)
+2. **application.properties** - Database & server config
+3. **DepartmentController.java** - Example REST API pattern
+4. **departments.html** - Example Thymeleaf template
+5. **department.js** - Example JavaScript CRUD operations
 
-      @Autowired
-      private DepartmentMapper mapper;
-  }
-  ```
+---
 
-- ✅ **Bắt buộc:**
+## 🚀 Quick Commands
 
-  ```java
-  @Service
-  public class DepartmentServiceImpl implements DepartmentService {
+```bash
+# Build project
+.\mvnw.cmd clean package -DskipTests
+
+# Run application
+.\mvnw.cmd spring-boot:run
+
+# Check git status
+git status
+
+# View recent commits
+git log --oneline -10
+
+# View current branch
+git branch -a
+```
+
+---
+
+## ✨ Known Issues & Limitations
+
+1. **No Authentication:** All users have full access
+2. **No Pagination:** Returns all data (performance issue with large datasets)
+3. **Limited Validation:** Basic frontend validation only
+4. **No Image Upload:** Asset details support text only
+5. **No Backup Strategy:** Database needs manual backup setup
+6. **No Audit Trail:** No user tracking for changes
+
+---
+
+## 📋 Getting Started Checklist for New Developers
+
+- [ ] Read this README.md completely
+- [ ] Check application.properties for DB settings
+- [ ] Examine DepartmentController.java for API pattern
+- [ ] Review departments.html for UI pattern
+- [ ] Check department.js for JavaScript interactions
+- [ ] Run application: `.\mvnw.cmd spring-boot:run`
+- [ ] Test API: GET http://localhost:8080/api/departments
+- [ ] Test UI: http://localhost:8080/quanlytaisan/phong-ban
+- [ ] Review git history: `git log --oneline`
+- [ ] Understand Phase 3 features (transfers & history)
+
+---
+
+## 📞 Documentation
+
+For more details:
+
+- **Entity Models:** See `/entity/` packages
+- **API Logic:** See `/controller/` & `/service/`
+- **Database Schema:** See `@Entity` classes & table definitions above
+- **Frontend:** See `templates/` & `static/js/`
+- **Git History:** Run `git log --all --graph --decorate`
+
+**Team:** Nhóm 18 | **Status:** Phase 3 In Development | **Branch:** phase3-development
 
       private final DepartmentRepository repository;
       private final DepartmentMapper mapper;
@@ -479,8 +636,10 @@ GET     /api/employees/code/{code}     → Tìm nhân viên theo mã
           this.repository = repository;
           this.mapper = mapper;
       }
-  }
-  ```
+
+}
+
+```
 
 ### 📋 Quy tắc mã hoá (Naming Convention)
 
@@ -495,15 +654,17 @@ GET     /api/employees/code/{code}     → Tìm nhân viên theo mã
 ### 📂 Mẫu cấu trúc folder
 
 ```
+
 src/main/java/com/nhom18/quanlytaisan/
-├── controller/      (đặt @Controller & @RestController ở đây)
-├── service/         (đặt interface & implementation)
-├── repository/      (đặt JPA Repository)
-├── entity/          (đặt JPA Entity)
-├── dto/             (đặt DTO classes)
-├── exception/       (đặt custom exception)
-└── utils/           (đặt utility & constants)
-```
+├── controller/ (đặt @Controller & @RestController ở đây)
+├── service/ (đặt interface & implementation)
+├── repository/ (đặt JPA Repository)
+├── entity/ (đặt JPA Entity)
+├── dto/ (đặt DTO classes)
+├── exception/ (đặt custom exception)
+└── utils/ (đặt utility & constants)
+
+````
 
 ---
 
@@ -592,7 +753,7 @@ src/main/java/com/nhom18/quanlytaisan/
 
    ```bash
    git checkout -b feature/xxx
-   ```
+````
 
 2. **Phát triển bao gồm:**
    - ✅ Entity (nếu cần bảng DB mới)

@@ -5,9 +5,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Repository cho Entity DepreciationHistory
+ * Senior Spring Boot practice: JpaRepository provides CRUD + custom queries
  */
 @Repository
 public interface DepreciationHistoryRepository extends JpaRepository<DepreciationHistory, Long> {
@@ -29,10 +31,21 @@ public interface DepreciationHistoryRepository extends JpaRepository<Depreciatio
 
     /**
      * Tìm kiếm lịch sử khấu hao của asset theo năm tháng cụ thể
+     * Trả về Optional vì một kỳ chỉ có duy nhất một record
+     *
      * @param assetId ID của tài sản
      * @param periodMonth Tháng
      * @param periodYear Năm
-     * @return Danh sách lịch sử khấu hao
+     * @return Optional chứa lịch sử khấu hao (hoặc rỗng nếu không tồn tại)
      */
-    List<DepreciationHistory> findByAsset_IdAndPeriodMonthAndPeriodYear(Long assetId, Integer periodMonth, Integer periodYear);
+    Optional<DepreciationHistory> findByAsset_IdAndPeriodMonthAndPeriodYear(Long assetId, Integer periodMonth, Integer periodYear);
+
+    /**
+     * Kiểm tra xem kỳ khấu hao có tồn tại hay không
+     * @param assetId ID của tài sản
+     * @param periodMonth Tháng
+     * @param periodYear Năm
+     * @return true nếu tồn tại, false nếu không
+     */
+    boolean existsByAsset_IdAndPeriodMonthAndPeriodYear(Long assetId, Integer periodMonth, Integer periodYear);
 }

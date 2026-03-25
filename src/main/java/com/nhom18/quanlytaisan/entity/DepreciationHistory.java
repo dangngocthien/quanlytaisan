@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
  * Entity DepreciationHistory - Lưu trữ lịch sử khấu hao hàng tháng
  */
 @Entity
-@Table(name = "depreciation_histories")
+@Table(name = "depreciation_history")
 public class DepreciationHistory {
 
     @Id
