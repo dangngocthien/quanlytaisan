@@ -205,10 +205,13 @@ class AssetManager {
       }
     });
 
-    // Download QR Code Event
+    // Download and Print QR Code Event
     document.addEventListener("click", (e) => {
       if (e.target.closest("#btnDownloadQR")) {
         this.downloadQRCode();
+      }
+      if (e.target.closest("#btnPrintQR")) {
+        this.printQRCode();
       }
     });
 
@@ -538,6 +541,97 @@ class AssetManager {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  }
+
+  /**
+   * Tính năng in trực tiếp tem mã QR độc lập
+   */
+  printQRCode() {
+    const qrCanvas = document.querySelector("#qrcode-display canvas");
+    if (!qrCanvas) {
+      this.showError("Không tìm thấy mã QR để in!");
+      return;
+    }
+
+    const assetCode = document.getElementById("assetCode").value || "N/A";
+    const assetName =
+      document.getElementById("assetName").value || "Tài sản chưa đặt tên";
+
+    // Tạo data URI của ảnh để nhúng vào trang in
+    const dataUrl = qrCanvas.toDataURL("image/png");
+
+    // Mở popup in
+    const printWindow = window.open("", "_blank", "width=400,height=600");
+    if (!printWindow) {
+      this.showError("Vui lòng cho phép popup để in tem.");
+      return;
+    }
+
+    // Nội dung trang in
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>In Tem Tài Sản</title>
+          <style>
+            @page {
+              size: 50mm 50mm; /* Kích thước tối ưu cho máy in tem nhỏ */
+              margin: 0;
+            }
+            body { 
+              font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+              display: flex; 
+              justify-content: center; 
+              align-items: center; 
+              height: 100vh; 
+              margin: 0; 
+              background: #fff; 
+            }
+            .label-wrap { 
+              border: 1px solid #000; 
+              padding: 5px; 
+              text-align: center; 
+              width: 45mm; 
+              height: 45mm;
+              box-sizing: border-box; 
+              border-radius: 4px; 
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: space-between;
+            }
+            .title { font-weight: bold; font-size: 10px; text-transform: uppercase; border-bottom: 1px solid #ddd; width: 100%; padding-bottom: 2px;}
+            .name { font-size: 11px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; margin-top: 3px; }
+            img { width: 70px; height: 70px; margin: 2px 0; }
+            .code { font-size: 10px; }
+            
+            /* Dành cho test máy in A4 bình thường (Hiển thị căn giữa) */
+            @media print {
+              body { background-color: white; padding: 0; }
+              .label-wrap { border: 1px solid #000; page-break-inside: avoid; }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="label-wrap">
+            <div class="title">TÀI SẢN CÔNG TY</div>
+            <div class="name" title="${assetName}">${assetName}</div>
+            <img src="${dataUrl}" />
+            <div class="code">Mã: ${assetCode}</div>
+          </div>
+          <script>
+            // Tự động gọi lệnh in sau khi load ảnh xong
+            window.onload = function() {
+              setTimeout(function() {
+                window.print();
+                window.close();
+              }, 300);
+            }
+          </script>
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
   }
 
   /**

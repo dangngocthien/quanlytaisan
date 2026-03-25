@@ -27,18 +27,20 @@ Hệ thống Quản lý Tài sản là một ứng dụng web được phát tri
 - ✅ **Quét QR Code:** Tích hợp camera vào web để quét mã QR và tự động điền mã tra cứu tài sản.
 - ✅ **Sinh mã QR:** Tự động sinh mã QR cho từng tài sản với thiết kế chuẩn (có viền trắng, độ tương phản cao) giúp máy quét dễ đọc.
 - ✅ **Tải mã QR:** Tính năng tải mã QR về máy tính định dạng PNG với phông nền trắng hoàn thiện.
+- ✅ **In tem mã tài sản:** Tự động tạo bản HTML/CSS dàn trang lưới A4 và in tem riêng lẻ qua popup cực kỳ tối ưu, tương thích cả máy in tem nhỏ lẫn máy in A4.
 
 ### 🔄 Đang phát triển (In Progress)
 
 - 🔄 **Form Validation:** Client-side & server-side, error messages chi tiết
-- 🔄 **Error Handling:** Professional notifications (Preparing Toastr system)
+- 🔄 **Export báo cáo Excel/PDF:** Đã có Excel, làm tiếp PDF
+- 🔄 **Lưu hồ sơ bảo hành:** Cập nhật thông tin bảo hành
 
 ### ❌ Chưa bắt đầu (TODO)
 
-- 🔲 **Upload ảnh:** Lưu trữ & hiển thị ảnh tài sản
-- 🔲 **Excel export:** Xuất dữ liệu sang Excel
+- 🔲 **Upload ảnh:** Lưu trữ & hiển thị ảnh nguyên bản của tài sản
 - 🔲 **Authentication:** Login/Logout, phân quyền
-- 🔲 **Báo cáo:** Dashboard & báo cáo chi tiết
+- 🔲 **Nhắc lịch bảo trì:** Hệ thống Quartz Scheduler
+- 🔲 **Dashboard phân quyền:** Dựa trên Role
 
 ---
 
