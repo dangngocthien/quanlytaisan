@@ -2,8 +2,11 @@ package com.nhom18.quanlytaisan.controller;
 
 import com.nhom18.quanlytaisan.dto.AssetDTO;
 import com.nhom18.quanlytaisan.dto.DepreciationHistoryDTO;
+import com.nhom18.quanlytaisan.service.ExcelExportService;
 import com.nhom18.quanlytaisan.service.ReportService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,12 +33,14 @@ import java.util.Map;
 public class ReportController {
 
     private final ReportService reportService;
+    private final ExcelExportService excelExportService;
 
     /**
      * Constructor injection - Senior Spring Boot practice
      */
-    public ReportController(ReportService reportService) {
+    public ReportController(ReportService reportService, ExcelExportService excelExportService) {
         this.reportService = reportService;
+        this.excelExportService = excelExportService;
     }
 
     // ============ PHASE 3: BASIC ASSET REPORTS ============
@@ -251,6 +256,46 @@ public class ReportController {
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             return createErrorResponse("Lỗi khi tạo báo cáo định giá phòng ban", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * GET /api/reports/valuation/export-all
+     * Xuất báo cáo định giá toàn bộ tài sản ra Excel
+     */
+    @GetMapping("/valuation/export-all")
+    public ResponseEntity<byte[]> exportAllValuationReport() {
+        try {
+            List<Map<String, Object>> reports = reportService.getAllValuationReports();
+            byte[] excelContent = excelExportService.exportValuationReport(reports, "Báo Cáo Định Giá Tổng Hợp");
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
+            headers.setContentDispositionFormData("attachment", "BaoCaoDinhGia_ToanBo_" + System.currentTimeMillis() + ".xlsx");
+
+            return new ResponseEntity<>(excelContent, headers, HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
+     * GET /api/reports/department-valuation/{departmentId}/export
+     * Xuất báo cáo định giá theo phòng ban ra Excel
+     */
+    @GetMapping("/department-valuation/{departmentId}/export")
+    public ResponseEntity<byte[]> exportDepartmentValuationReport(@PathVariable Long departmentId) {
+        try {
+            List<Map<String, Object>> reports = reportService.getDepartmentValuationReport(departmentId);
+            byte[] excelContent = excelExportService.exportValuationReport(reports, "Báo Cáo Định Giá Phòng Ban");
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
+            headers.setContentDispositionFormData("attachment", "BaoCaoDinhGia_PhongBan_" + departmentId + "_" + System.currentTimeMillis() + ".xlsx");
+
+            return new ResponseEntity<>(excelContent, headers, HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 

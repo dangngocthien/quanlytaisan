@@ -42,6 +42,43 @@ class ValuationReportManager {
     document
       .getElementById("btnReset")
       .addEventListener("click", () => this.handleReset());
+    document
+      .getElementById("btnExportExcel")
+      .addEventListener("click", () => this.handleExportExcel());
+  }
+
+  /**
+   * Xử lý xuất Excel
+   */
+  handleExportExcel() {
+    const filterSelect = document.getElementById("filterDepartment");
+    const departmentId = filterSelect ? filterSelect.value : "";
+
+    // Nút đang xử lý
+    const btn = document.getElementById("btnExportExcel");
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xuất...';
+    btn.disabled = true;
+
+    // Xây dựng URL động tùy theo filter
+    let url = `${ValuationReportManager.CONFIG.API_BASE}/valuation/export-all`;
+    if (departmentId) {
+      url = `${ValuationReportManager.CONFIG.API_BASE}/department-valuation/${departmentId}/export`;
+    }
+
+    // Trigger download ẩn qua iframe hoặc thẻ a
+    const link = document.createElement("a");
+    link.href = url;
+    link.target = "_blank"; // Đề phòng
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    // Phục hồi lại nút sau một khoảng thời gian ngắn
+    setTimeout(() => {
+      btn.innerHTML = originalText;
+      btn.disabled = false;
+    }, 2000);
   }
 
   /**

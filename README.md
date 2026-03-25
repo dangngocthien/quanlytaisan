@@ -117,12 +117,13 @@ Hệ thống Quản lý Tài sản là một ứng dụng web được phát tri
 - Giao diện Dashboard thống kê báo cáo
 - Tích hợp biểu đồ Chart.js trực quan (Pie chart, Bar chart)
 - Sửa lỗi mapping JPA Entity `depreciation_history`
+- Export báo cáo định giá sang file Excel với Apache POI
 
 #### 🔄 Chuẩn bị/Đang làm:
 
 - Professional error handling (Toastr notification system)
 - Cải thiện form validation (client + server)
-- Export báo cáo sang Excel/PDF
+- Export các báo cáo khác sang Excel/PDF
 - Tra cứu lịch sử bằng khoảng thời gian
 
 ---
@@ -719,11 +720,11 @@ src/main/java/com/nhom18/quanlytaisan/
   - [ ] Service & Controller cho chuyển tài sản
   - [ ] Lịch sử điều chuyển
 
-- [ ] **Phase 4: Tính khấu hao & Báo cáo**
-  - [ ] Entity DepreciationHistory
-  - [ ] Service tính khấu hao
-  - [ ] Tạo báo cáo tài sản
-  - [ ] Export báo cáo (PDF/Excel)
+- [x] **Phase 4: Tính khấu hao & Báo cáo**
+  - [x] Entity DepreciationHistory
+  - [x] Service tính khấu hao
+  - [x] Tạo báo cáo tài sản
+  - [x] Export báo cáo (Excel định giá)
 
 - [ ] **Phase 6: Tính năng nâng cao**
   - [ ] QR Code sinh & quét

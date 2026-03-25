@@ -170,6 +170,14 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
+    public List<Map<String, Object>> getAllValuationReports() {
+        return assetRepository.findAll()
+                .stream()
+                .map(asset -> getAssetValuationReport(asset.getId()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public BigDecimal getTotalBookValueByDepartment(Long departmentId) {
         return assetRepository
                 .findAll()

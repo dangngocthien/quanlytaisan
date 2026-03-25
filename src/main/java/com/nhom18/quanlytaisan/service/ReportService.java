@@ -89,6 +89,12 @@ public interface ReportService {
     List<Map<String, Object>> getDepartmentValuationReport(Long departmentId);
 
     /**
+     * Lấy báo cáo định giá của tất cả tài sản trên toàn hệ thống
+     * @return Danh sách báo cáo định giá
+     */
+    List<Map<String, Object>> getAllValuationReports();
+
+    /**
      * Lấy tổng giá trị sổ sách của tài sản trong phòng ban
      * Công thức: Tổng (Giá mua - Khấu hao lũy tích) cho tất cả tài sản trong phòng
      * @param departmentId ID phòng ban
