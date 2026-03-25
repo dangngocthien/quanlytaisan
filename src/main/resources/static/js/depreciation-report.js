@@ -91,6 +91,7 @@ class DepreciationReportManager {
   async loadReportData(year) {
     try {
       this.showLoading(true);
+      9;
       const response = await fetch(
         `${DepreciationReportManager.CONFIG.API_BASE}/depreciation-summary/${year}`,
       );

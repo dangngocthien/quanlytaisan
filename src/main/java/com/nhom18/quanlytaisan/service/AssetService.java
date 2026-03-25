@@ -50,4 +50,9 @@ public interface AssetService {
      * Lấy danh sách tài sản theo trạng thái
      */
     List<AssetDTO> findByStatus(String status);
+    
+    /**
+     * Tra cứu tài sản theo nhiều tiêu chí
+     */
+    List<AssetDTO> searchAssets(String keyword, Long categoryId, Long departmentId);
 }

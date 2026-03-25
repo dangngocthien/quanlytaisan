@@ -159,6 +159,19 @@ public class AssetServiceImpl implements AssetService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<AssetDTO> searchAssets(String keyword, Long categoryId, Long departmentId) {
+        // Handle empty/null strings to prevent Postgres bytea cast error
+        if (keyword == null || keyword.trim().isEmpty()) {
+            keyword = "";
+        }
+        
+        List<Asset> assets = assetRepository.searchAssets(keyword, categoryId, departmentId);
+        return assets.stream()
+                .map(this::mapEntityToDTO)
+                .collect(Collectors.toList());
+    }
+
     /**
      * Mapping Entity → DTO (thủ công) - Includes Category, Department, Employee info
      */

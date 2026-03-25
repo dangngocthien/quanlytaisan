@@ -96,6 +96,83 @@
             </button>
           </div>
 
+          <!-- Tra cứu Card -->
+          <div
+            class="card shadow-sm mb-4 border-0"
+            style="border-radius: 12px; background-color: #f8f9fa"
+          >
+            <div class="card-body p-4">
+              <h5 class="card-title fw-bold text-primary mb-3">
+                <i class="fas fa-filter"></i> Bộ lọc & Tra cứu
+              </h5>
+              <form th:action="@{/tai-san}" method="get" class="row g-3">
+                <div class="col-md-4">
+                  <label
+                    for="searchKeyword"
+                    class="form-label text-muted fw-semibold"
+                    >Tên hoặc Mã tài sản</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="searchKeyword"
+                    name="keyword"
+                    th:value="${keyword}"
+                    placeholder="Nhập từ khóa cần tìm..."
+                  />
+                </div>
+                <div class="col-md-3">
+                  <label
+                    for="searchCategoryId"
+                    class="form-label text-muted fw-semibold"
+                    >Loại tài sản</label
+                  >
+                  <select
+                    id="searchCategoryId"
+                    name="categoryId"
+                    class="form-select"
+                  >
+                    <option value="">-- Tất cả loại TS --</option>
+                    <option
+                      th:each="cat : ${categories}"
+                      th:value="${cat.id}"
+                      th:text="${cat.name}"
+                      th:selected="${cat.id == selectedCategoryId}"
+                    ></option>
+                  </select>
+                </div>
+                <div class="col-md-3">
+                  <label
+                    for="searchDepartmentId"
+                    class="form-label text-muted fw-semibold"
+                    >Phòng ban quản lý</label
+                  >
+                  <select
+                    id="searchDepartmentId"
+                    name="departmentId"
+                    class="form-select"
+                  >
+                    <option value="">-- Tất cả phòng ban --</option>
+                    <option
+                      th:each="dept : ${departments}"
+                      th:value="${dept.id}"
+                      th:text="${dept.name}"
+                      th:selected="${dept.id == selectedDepartmentId}"
+                    ></option>
+                  </select>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                  <button
+                    type="submit"
+                    class="btn btn-primary w-100 fw-bold shadow-sm"
+                  >
+                    <i class="fas fa-search"></i> Tìm kiếm
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
           <!-- Assets Table Card -->
           <div class="card shadow-sm">
             <div class="card-body p-0">

@@ -22,6 +22,7 @@ Hệ thống Quản lý Tài sản là một ứng dụng web được phát tri
 - ✅ **REST API:** Toàn bộ endpoints cho CRUD operations
 - ✅ **Phase 3 - Asset Transfer UI:** Modal form điều chuyển tài sản giữa phòng ban
 - ✅ **Phase 3 - History Table:** Bảng hiển thị lịch sử điều chuyển tài sản
+- ✅ **Tra cứu tài sản:** Bộ lọc tìm kiếm theo Mã/Tên tài sản, Loại tài sản, và Phòng ban
 
 ### 🔄 Đang phát triển (In Progress)
 
