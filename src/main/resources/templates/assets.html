@@ -1,0 +1,421 @@
+﻿<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản lý Tài sản</title>
+
+    <!-- Bootstrap 5 CSS từ CDN -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- FontAwesome Icons -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Custom CSS - Thymeleaf resource syntax -->
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav
+      class="navbar navbar-expand-lg navbar-dark"
+      style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+    >
+      <div class="container-fluid">
+        <span class="navbar-brand fw-bold">
+          <i class="fas fa-building"></i> Hệ thống Quản lý Tài sản
+        </span>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/phong-ban" th:href="@{/phong-ban}">
+                <i class="fas fa-door-open"></i> Phòng ban
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/tai-san" th:href="@{/tai-san}">
+                <i class="fas fa-cube"></i> Tài sản
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <i class="fas fa-chart-bar"></i> Báo cáo
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container-fluid py-5">
+      <div class="row">
+        <div class="col-12">
+          <!-- Header -->
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h2 fw-bold">
+              <i class="fas fa-cube"></i> Danh sách Tài sản
+            </h1>
+            <button class="btn btn-success" id="btnAddAsset">
+              <i class="fas fa-plus"></i> Thêm tài sản mới
+            </button>
+          </div>
+
+          <!-- Assets Table Card -->
+          <div class="card shadow-sm">
+            <div class="card-body p-0">
+              <!-- Empty State -->
+              <div
+                th:if="${assets == null or assets.isEmpty()}"
+                class="text-center py-5"
+              >
+                <i class="fas fa-inbox text-muted" style="font-size: 3rem"></i>
+                <p class="text-muted mt-3">Không có dữ liệu tài sản</p>
+              </div>
+
+              <!-- Assets Table -->
+              <div th:unless="${assets == null or assets.isEmpty()}">
+                <table class="table table-hover table-striped mb-0">
+                  <thead style="background-color: #f8f9fa">
+                    <tr>
+                      <th width="5%" class="text-center">STT</th>
+                      <th width="12%">Mã TS</th>
+                      <th width="18%">Tên TS</th>
+                      <th width="12%">Loại TS</th>
+                      <th width="15%">Giá trị hiện tại</th>
+                      <th width="12%">Trạng thái</th>
+                      <th width="18%">Phòng ban quản lý</th>
+                      <th width="8%" class="text-center">Thao tác</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      th:each="asset, stat : ${assets}"
+                      class="asset-row"
+                      th:data-asset-id="${asset.id}"
+                    >
+                      <!-- STT -->
+                      <td
+                        class="text-center fw-semibold text-muted"
+                        th:text="${stat.count}"
+                      ></td>
+
+                      <!-- Mã TS -->
+                      <td>
+                        <span
+                          class="badge bg-info"
+                          th:text="${asset.assetCode}"
+                        ></span>
+                      </td>
+
+                      <!-- Tên TS -->
+                      <td th:text="${asset.name}"></td>
+
+                      <!-- Loại TS -->
+                      <td th:text="${asset.categoryName}"></td>
+
+                      <!-- Giá trị hiện tại -->
+                      <td class="text-end">
+                        <span
+                          th:text="${#numbers.formatDecimal(asset.currentValue, 1, 'COMMA', 2, 'POINT')}"
+                        ></span>
+                        đ
+                      </td>
+
+                      <!-- Trạng thái -->
+                      <td>
+                        <span
+                          th:if="${asset.status == 'DANG_SUDUNG'}"
+                          class="badge bg-success"
+                        >
+                          <i class="fas fa-check-circle"></i> Đang sử dụng
+                        </span>
+                        <span
+                          th:if="${asset.status == 'TRONG_KHO'}"
+                          class="badge bg-secondary"
+                        >
+                          <i class="fas fa-box"></i> Trong kho
+                        </span>
+                        <span
+                          th:if="${asset.status == 'BAO_TRI'}"
+                          class="badge bg-warning"
+                        >
+                          <i class="fas fa-wrench"></i> Bảo trì
+                        </span>
+                        <span
+                          th:if="${asset.status == 'THANH_LY'}"
+                          class="badge bg-danger"
+                        >
+                          <i class="fas fa-trash"></i> Thanh lý
+                        </span>
+
+                        <!-- Hiển thị các trạng thái khác nếu có -->
+                        <span
+                          th:unless="${asset.status == 'DANG_SUDUNG' or asset.status == 'TRONG_KHO' or asset.status == 'BAO_TRI' or asset.status == 'THANH_LY'}"
+                          class="badge bg-info text-dark"
+                          th:text="${asset.status}"
+                        >
+                        </span>
+                      </td>
+
+                      <!-- Phòng ban quản lý -->
+                      <td th:text="${asset.currentDepartmentName}"></td>
+
+                      <!-- Thao tác -->
+                      <td class="text-center">
+                        <button
+                          class="btn btn-sm btn-warning btn-edit-asset"
+                          title="Sửa"
+                          th:data-asset-id="${asset.id}"
+                        >
+                          <i class="fas fa-edit"></i> Sửa
+                        </button>
+                        <button
+                          class="btn btn-sm btn-danger btn-delete-asset"
+                          title="Xóa"
+                          th:data-asset-id="${asset.id}"
+                        >
+                          <i class="fas fa-trash"></i> Xóa
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="card-footer bg-light">
+              <small class="text-muted">
+                <i class="fas fa-info-circle"></i>
+                Tổng số tài sản:
+                <strong
+                  th:text="${assets != null ? assets.size() : 0}"
+                ></strong>
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Thêm/Sửa Tài Sản -->
+    <div class="modal fade" id="modalAsset" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div
+            class="modal-header text-white"
+            style="
+              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            "
+          >
+            <h5 class="modal-title" id="modalAssetTitle">
+              <i class="fas fa-plus-circle"></i> Thêm Tài Sản Mới
+            </h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="formAsset">
+              <input type="hidden" id="assetId" />
+
+              <div class="row g-3">
+                <!-- Mã Tài Sản -->
+                <div class="col-md-6">
+                  <label class="form-label fw-bold"
+                    >Mã tài sản <span class="text-danger">*</span></label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="assetCode"
+                    required
+                    placeholder="VD: TS001"
+                  />
+                </div>
+
+                <!-- Tên Tài Sản -->
+                <div class="col-md-6">
+                  <label class="form-label fw-bold"
+                    >Tên tài sản <span class="text-danger">*</span></label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="assetName"
+                    required
+                    placeholder="VD: Laptop Dell Vostro"
+                  />
+                </div>
+
+                <!-- Loại Tài Sản -->
+                <div class="col-md-6">
+                  <label class="form-label fw-bold"
+                    >Loại tài sản <span class="text-danger">*</span></label
+                  >
+                  <select class="form-select" id="categoryId" required>
+                    <option value="">-- Chọn loại tài sản --</option>
+                    <option
+                      th:each="cat : ${categories}"
+                      th:value="${cat.id}"
+                      th:text="${cat.name}"
+                    ></option>
+                  </select>
+                </div>
+
+                <!-- Trạng thái -->
+                <div class="col-md-6">
+                  <label class="form-label fw-bold"
+                    >Trạng thái <span class="text-danger">*</span></label
+                  >
+                  <select class="form-select" id="status" required>
+                    <option value="DANG_SUDUNG">Đang sử dụng</option>
+                    <option value="TRONG_KHO">Trong kho</option>
+                    <option value="BAO_TRI">Bảo trì</option>
+                    <option value="THANH_LY">Thanh lý</option>
+                  </select>
+                </div>
+
+                <!-- Giá trị mua -->
+                <div class="col-md-6">
+                  <label class="form-label fw-bold"
+                    >Giá mua (VNĐ) <span class="text-danger">*</span></label
+                  >
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="purchasePrice"
+                    required
+                    min="0"
+                  />
+                </div>
+
+                <!-- Giá trị hiện tại -->
+                <div class="col-md-6">
+                  <label class="form-label fw-bold"
+                    >Giá trị hiện tại (VNĐ)</label
+                  >
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="currentValue"
+                    min="0"
+                  />
+                </div>
+
+                <!-- Ngày mua -->
+                <div class="col-md-6">
+                  <label class="form-label fw-bold"
+                    >Ngày mua <span class="text-danger">*</span></label
+                  >
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="purchaseDate"
+                    required
+                  />
+                </div>
+
+                <!-- Ngày bắt đầu sử dụng -->
+                <div class="col-md-6">
+                  <label class="form-label fw-bold">Ngày bắt đầu sử dụng</label>
+                  <input type="date" class="form-control" id="usageStartDate" />
+                </div>
+
+                <!-- Phòng ban quản lý -->
+                <div class="col-md-12">
+                  <label class="form-label fw-bold"
+                    >Phòng ban quản lý <span class="text-danger">*</span></label
+                  >
+                  <select class="form-select" id="currentDepartmentId" required>
+                    <option value="">-- Chọn phòng ban --</option>
+                    <option
+                      th:each="dept : ${departments}"
+                      th:value="${dept.id}"
+                      th:text="${dept.name}"
+                    ></option>
+                  </select>
+                </div>
+
+                <!-- Thông tin bảo hành -->
+                <div class="col-12 mt-4 mb-2">
+                  <h6 class="border-bottom pb-2 text-primary">
+                    Thông tin bảo hành
+                  </h6>
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label fw-bold"
+                    >Nhà cung cấp / Bảo hành</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="warrantyProvider"
+                    placeholder="Tên đơn vị bảo hành"
+                  />
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label fw-bold"
+                    >Ngày hết hạn bảo hành</label
+                  >
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="warrantyExpiryDate"
+                  />
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer bg-light">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Đóng
+            </button>
+            <button type="button" class="btn btn-primary" id="btnSaveAsset">
+              <i class="fas fa-save"></i> Lưu thông tin
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle từ CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom JS - Thymeleaf resource syntax -->
+    <script th:inline="javascript">
+      // Khai báo biến contextPath dùng chung cho JS
+      var contextPath = /*[[@{/}]]*/ "/";
+      if (!contextPath.endsWith("/")) {
+        contextPath += "/";
+      }
+    </script>
+    <script th:src="@{/js/asset.js}"></script>
+  </body>
+</html>
+
+
+
