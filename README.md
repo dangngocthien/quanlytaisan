@@ -733,9 +733,9 @@ src/main/java/com/nhom18/quanlytaisan/
   - [x] Export báo cáo (Excel định giá)
 
 - [ ] **Phase 6: Tính năng nâng cao**
-  - [ ] QR Code sinh & quét
+  - [x] QR Code sinh & in tem quét
   - [ ] Export Excel danh sách tài sản
-  - [ ] Dashboard thống kê
+  - [x] Dashboard thống kê (Tài sản theo Phòng ban)
   - [ ] Báo cáo khấu hao
   - [ ] Thông báo (Email/SMS) bảo trì sắp tới
 

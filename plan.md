@@ -209,9 +209,9 @@ Total:              ~14 tuần (3.5 tháng)
 
 ### **Tuần 12-14 (Phase 6)**
 
-- [ ] In tem QR code
+- [x] In tem QR code
 - [ ] Nhắc lịch bảo trì (Scheduler)
-- [ ] Dashboard chart
+- [x] Dashboard chart
 - [ ] Upload hồ sơ bảo hành
 - [ ] Export Excel/PDF
 - [ ] Final testing & bug fix

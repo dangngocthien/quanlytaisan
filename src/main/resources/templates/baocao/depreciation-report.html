@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html xmlns:th="http://www.thymeleaf.org" lang="vi">
   <head>
     <meta charset="UTF-8" />
@@ -43,6 +43,11 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="/baocao/department-dashboard" th:href="@{/baocao/department-dashboard}">
+                  <i class="fas fa-chart-pie"></i> Dashboard
+                </a>
+              </li>
             <li class="nav-item">
               <a class="nav-link" href="/phong-ban" th:href="@{/phong-ban}">
                 <i class="fas fa-door-open"></i> Phòng ban
@@ -363,3 +368,7 @@
     <script th:src="@{/js/depreciation-report.js}"></script>
   </body>
 </html>
+
+
+
+

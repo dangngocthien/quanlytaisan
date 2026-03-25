@@ -204,6 +204,42 @@ public class ReportController {
         }
     }
 
+    /**
+     * GET /api/reports/dashboard/departments
+     * Báo cáo tổng tài sản và giá trị theo từng phòng ban
+     */
+    @GetMapping("/dashboard/departments")
+    public ResponseEntity<?> getDashboardByDepartments() {
+        try {
+            List<AssetDTO> allAssets = reportService.getAllAssets();
+            
+            Map<String, List<AssetDTO>> assetsByDept = allAssets.stream()
+                .filter(a -> a.getCurrentDepartmentName() != null)
+                .collect(java.util.stream.Collectors.groupingBy(AssetDTO::getCurrentDepartmentName));
+
+            List<Map<String, Object>> deptStats = assetsByDept.entrySet().stream()
+                .map(entry -> {
+                    String deptName = entry.getKey();
+                    List<AssetDTO> deptAssets = entry.getValue();
+                    long count = deptAssets.size();
+                    BigDecimal totalVal = deptAssets.stream()
+                        .map(a -> a.getCurrentValue() != null ? a.getCurrentValue() : BigDecimal.ZERO)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+                        
+                    Map<String, Object> stat = new HashMap<>();
+                    stat.put("departmentName", deptName);
+                    stat.put("assetCount", count);
+                    stat.put("totalValue", totalVal);
+                    return stat;
+                })
+                .collect(java.util.stream.Collectors.toList());
+
+            return ResponseEntity.ok(deptStats);
+        } catch (Exception e) {
+            return createErrorResponse("Lỗi khi lấy dữ liệu dashboard theo phòng ban", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     // ============ PHASE 4: DEPRECIATION & VALUATION REPORTS ============
 
     /**

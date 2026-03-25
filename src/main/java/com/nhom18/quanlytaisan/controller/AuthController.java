@@ -13,6 +13,6 @@ public class AuthController {
 
     @GetMapping("/")
     public String homePage() {
-        return "redirect:/tai-san"; // Tạm thời chuyển hướng sang trang quản lý tài sản đến khi có trang Dashboard
+        return "redirect:/baocao/department-dashboard"; // Chuyển hướng sang trang Dashboard
     }
 }

@@ -29,4 +29,12 @@ public class ReportWebController {
     public String getValuationReport() {
         return "baocao/valuation-report";
     }
+
+    /**
+     * Display Department Dashboard Page
+     */
+    @GetMapping("/department-dashboard")
+    public String getDepartmentDashboard() {
+        return "baocao/department-dashboard";
+    }
 }
