@@ -57,6 +57,9 @@ public class Asset {
     @Column(name = "warranty_expiry_date")
     private LocalDate warrantyExpiryDate;
 
+    @Column(name = "useful_life_months", nullable = false)
+    private Integer usefulLifeMonths = 36; // Mặc định: 36 tháng (3 năm)
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -251,6 +254,14 @@ public class Asset {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public Integer getUsefulLifeMonths() {
+        return usefulLifeMonths != null ? usefulLifeMonths : 36;
+    }
+
+    public void setUsefulLifeMonths(Integer usefulLifeMonths) {
+        this.usefulLifeMonths = usefulLifeMonths != null ? usefulLifeMonths : 36;
     }
 
     @Override

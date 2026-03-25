@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 public class DepreciationHistoryServiceImpl implements DepreciationHistoryService {
 
     // ============ CONSTANTS ============
-    private static final int DEFAULT_USEFUL_LIFE_MONTHS = 36; // 3 năm
+    private static final int DEFAULT_USEFUL_LIFE_MONTHS = 36; // 3 năm (fallback)
     private static final int SCALE = 2; // Làm tròn đến 2 chữ số thập phân
     private static final RoundingMode ROUNDING_MODE = RoundingMode.HALF_UP;
 
@@ -60,6 +60,9 @@ public class DepreciationHistoryServiceImpl implements DepreciationHistoryServic
         Asset asset = assetRepository.findById(assetId)
                 .orElseThrow(() -> new RuntimeException("Asset not found with ID: " + assetId));
 
+        // Calculate depreciation based on original purchase price
+        BigDecimal bookValue = asset.getPurchasePrice(); // Lấy giá trị của sản phẩm
+
         // Check if depreciation already exists for this period
         Optional<DepreciationHistory> existingDH = depreciationHistoryRepository
                 .findByAsset_IdAndPeriodMonthAndPeriodYear(assetId, month, year);
@@ -77,17 +80,33 @@ public class DepreciationHistoryServiceImpl implements DepreciationHistoryServic
             depreciationHistory.setPeriodYear(year);
         }
 
-        // Calculate depreciation amount
-        BigDecimal monthlyDepreciation = calculateMonthlyDepreciation(asset.getPurchasePrice());
+        // Determine useful life: 1) Asset, 2) Category, 3) Default
+        int usefulLife = DEFAULT_USEFUL_LIFE_MONTHS;
+        if (asset.getUsefulLifeMonths() != null && asset.getUsefulLifeMonths() > 0) {
+            usefulLife = asset.getUsefulLifeMonths();
+        } else if (asset.getCategory() != null && asset.getCategory().getDefaultUsefulLifeMonths() != null && asset.getCategory().getDefaultUsefulLifeMonths() > 0) {
+            usefulLife = asset.getCategory().getDefaultUsefulLifeMonths();
+        }
 
-        // Get previous period's remaining value or use purchase price if first period
-        BigDecimal previousRemainingValue = getPreviousPeriodRemainingValue(assetId, month, year);
+        // Calculate depreciation amount based on full asset value and useful life
+        BigDecimal monthlyDepreciation = calculateMonthlyDepreciation(
+                bookValue,
+                usefulLife
+        );
 
-        // Calculate remaining value
-        BigDecimal remainingValue = previousRemainingValue.subtract(monthlyDepreciation);
+        // Tính tổng khấu hao lũy tích đến hiện tại (nếu đang update thì trừ đi phần cũ của tháng này)
+        BigDecimal totalAccumulatedSoFar = getTotalAccumulatedDepreciation(assetId);
+        if (existingDH.isPresent() && existingDH.get().getDepreciationAmount() != null) {
+            totalAccumulatedSoFar = totalAccumulatedSoFar.subtract(existingDH.get().getDepreciationAmount());
+        }
 
-        // Prevent negative book value
+        // Giá trị còn lại = Giá mua - (Khấu hao lũy tích cũ + Khấu hao tháng này)
+        BigDecimal newAccumulatedDepreciation = totalAccumulatedSoFar.add(monthlyDepreciation);
+        BigDecimal remainingValue = bookValue.subtract(newAccumulatedDepreciation);
+
+        // Prevent negative book value and correct the final depreciation span
         if (remainingValue.compareTo(BigDecimal.ZERO) < 0) {
+            monthlyDepreciation = bookValue.subtract(totalAccumulatedSoFar); // Khấu hao khoản còn lại cuối cùng
             remainingValue = BigDecimal.ZERO;
         }
 
@@ -95,6 +114,10 @@ public class DepreciationHistoryServiceImpl implements DepreciationHistoryServic
         depreciationHistory.setDepreciationAmount(monthlyDepreciation);
         depreciationHistory.setRemainingValue(remainingValue);
         depreciationHistory.setCalculatedAt(LocalDateTime.now());
+
+        // Update Asset current value
+        asset.setCurrentValue(remainingValue);
+        assetRepository.save(asset);
 
         // Save to database
         DepreciationHistory saved = depreciationHistoryRepository.save(depreciationHistory);
@@ -210,12 +233,18 @@ public class DepreciationHistoryServiceImpl implements DepreciationHistoryServic
      * Công thức: Giá mua / Tuổi thọ (tháng)
      *
      * @param purchasePrice Giá mua
+     * @param usefulLifeMonths Tuổi thọ hữu ích (tháng)
      * @return Khấu hao hàng tháng
      */
-    private BigDecimal calculateMonthlyDepreciation(BigDecimal purchasePrice) {
+    private BigDecimal calculateMonthlyDepreciation(BigDecimal purchasePrice, Integer usefulLifeMonths) {
+        if (purchasePrice == null || purchasePrice.compareTo(BigDecimal.ZERO) <= 0) {
+            return BigDecimal.ZERO;
+        }
+
+        int months = usefulLifeMonths != null && usefulLifeMonths > 0 ? usefulLifeMonths : DEFAULT_USEFUL_LIFE_MONTHS;
         return purchasePrice
                 .divide(
-                        new BigDecimal(DEFAULT_USEFUL_LIFE_MONTHS),
+                        new BigDecimal(months),
                         SCALE,
                         ROUNDING_MODE
                 );

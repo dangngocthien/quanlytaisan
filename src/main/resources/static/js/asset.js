@@ -39,6 +39,7 @@ class AssetManager {
     this.modal = null;
     this.formData = null;
     this.isEditMode = false;
+    this.html5QrcodeScanner = null;
 
     this.init();
   }
@@ -49,7 +50,97 @@ class AssetManager {
   init() {
     this.setupModal();
     this.attachEventListeners();
+    this.setupQRScanner();
     this.logInitialization();
+  }
+
+  /**
+   * Setup QR Scanner
+   */
+  setupQRScanner() {
+    const qrModalEl = document.getElementById("qrScannerModal");
+    if (!qrModalEl) return;
+
+    qrModalEl.addEventListener("shown.bs.modal", () => {
+      this.startQRScanner();
+    });
+
+    qrModalEl.addEventListener("hidden.bs.modal", () => {
+      this.stopQRScanner();
+    });
+  }
+
+  startQRScanner() {
+    if (this.html5QrcodeScanner) return; // Already running
+
+    // Ẩn text placeholder khi bắt đầu quét
+    const resultsDiv = document.getElementById("qr-reader-results");
+    if (resultsDiv) {
+      resultsDiv.style.display = "none";
+    }
+
+    // Sử dụng html5-qrcode thuần thay vì Hml5QrcodeScanner UI tích hợp
+    // để tránh các nút xin quyền rườm rà, ép nó chạy thẳng camera
+    this.html5QrcodeScanner = new Html5Qrcode("qr-reader");
+
+    const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+
+    // Bắt đầu quét với camera mặc định mặt sau (environment)
+    this.html5QrcodeScanner
+      .start(
+        { facingMode: "environment" },
+        config,
+        (decodedText, decodedResult) =>
+          this.onScanSuccess(decodedText, decodedResult),
+        (errorMessage) => this.onScanFailure(errorMessage),
+      )
+      .catch((err) => {
+        console.error(`Error starting QR Scanner: ${err}`);
+        if (resultsDiv) {
+          resultsDiv.style.display = "block";
+          resultsDiv.innerHTML = `<span class="text-danger"><i class="fas fa-exclamation-triangle"></i> Lỗi Camera: ${err.message || "Không truy cập được camera. Vui lòng cấp quyền."}</span>`;
+        }
+      });
+  }
+
+  stopQRScanner() {
+    if (this.html5QrcodeScanner && this.html5QrcodeScanner.isScanning) {
+      this.html5QrcodeScanner
+        .stop()
+        .then((ignore) => {
+          // QR Code scanning is stopped.
+          this.html5QrcodeScanner.clear();
+          this.html5QrcodeScanner = null;
+        })
+        .catch((err) => {
+          console.error("Stop failed: ", err);
+        });
+    } else {
+      this.html5QrcodeScanner = null;
+    }
+  }
+
+  onScanSuccess(decodedText, decodedResult) {
+    console.log(`[QR] Scan success: ${decodedText}`);
+
+    // Play a beep sound if possible (optional)
+    const qrModalEl = document.getElementById("qrScannerModal");
+    const qrModalInstance = bootstrap.Modal.getInstance(qrModalEl);
+    if (qrModalInstance) {
+      qrModalInstance.hide();
+    }
+
+    // Auto fill the search field and submit the form
+    const searchInput = document.getElementById("searchKeyword");
+    if (searchInput) {
+      searchInput.value = decodedText;
+      searchInput.closest("form").submit();
+    }
+  }
+
+  onScanFailure(error) {
+    // handle scan failure, usually better to ignore and keep scanning.
+    // console.warn(`Code scan error = ${error}`);
   }
 
   /**
@@ -70,6 +161,12 @@ class AssetManager {
     if (historyModalEl) {
       this.historyModal = new bootstrap.Modal(historyModalEl);
     }
+  }
+
+  /**
+   * Attach global DOM event listeners
+   */
+  attachEventListeners() {
     document.addEventListener("click", (e) => {
       if (e.target.closest("#btnAddAsset")) {
         this.handleAddAsset();

@@ -6,11 +6,15 @@ import java.util.List;
 
 /**
  * Service interface cho tính toán và quản lý khấu hao tài sản
- * Phase 4: Deprecated calculation engine
+ * Phase 4: Depreciation calculation engine
  * 
  * Công thức khấu hao tuyến tính:
  *   - Khấu hao hàng tháng = Giá mua / Tuổi thọ (tháng)
  *   - Giá trị sổ sách = Giá mua - Khấu hao lũy tích
+ * 
+ * Tuổi thọ:
+ *   - Mỗi tài sản có tuổi thọ riêng (lưu trong cột useful_life_months của entity Asset)
+ *   - Nếu không set, mặc định là 36 tháng (3 năm)
  */
 public interface DepreciationHistoryService {
 

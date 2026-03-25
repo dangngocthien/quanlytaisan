@@ -16,6 +16,7 @@ public class AssetDTO {
     private String status;
     private String warrantyProvider;
     private LocalDate warrantyExpiryDate;
+    private Integer usefulLifeMonths = 36; // Tuổi thọ hữu ích (tháng), mặc định 36
 
     // Foreign Key Fields
     private Long categoryId;
@@ -224,6 +225,14 @@ public class AssetDTO {
 
     public void setCurrentEmployeeName(String currentEmployeeName) {
         this.currentEmployeeName = currentEmployeeName;
+    }
+
+    public Integer getUsefulLifeMonths() {
+        return usefulLifeMonths != null ? usefulLifeMonths : 36;
+    }
+
+    public void setUsefulLifeMonths(Integer usefulLifeMonths) {
+        this.usefulLifeMonths = usefulLifeMonths != null ? usefulLifeMonths : 36;
     }
 
     @Override

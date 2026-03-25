@@ -46,6 +46,25 @@ class DepreciationReportManager {
     if (btnExport) {
       btnExport.addEventListener("click", () => this.handleExportExcel());
     }
+
+    const btnConfirmCalculate = document.getElementById("btnConfirmCalculate");
+    if (btnConfirmCalculate) {
+      btnConfirmCalculate.addEventListener("click", () =>
+        this.handleCalculateAll(),
+      );
+    }
+
+    // Set default values for calculate modal when opened
+    const calculateModal = document.getElementById(
+      "calculateDepreciationModal",
+    );
+    if (calculateModal) {
+      calculateModal.addEventListener("show.bs.modal", () => {
+        const now = new Date();
+        document.getElementById("calcMonth").value = now.getMonth() + 1;
+        document.getElementById("calcYear").value = now.getFullYear();
+      });
+    }
   }
 
   setDefaultYear() {
@@ -207,6 +226,67 @@ class DepreciationReportManager {
       btnExport.disabled = false;
       btnExport.innerHTML = originalContent;
     }, 1500);
+  }
+
+  /**
+   * Handle Calculate All Depreciation
+   */
+  async handleCalculateAll() {
+    const month = document.getElementById("calcMonth").value;
+    const year = document.getElementById("calcYear").value;
+
+    if (!month || !year) {
+      alert("Vui lòng chọn đầy đủ tháng và năm để tính khấu hao.");
+      return;
+    }
+
+    const btnConfirm = document.getElementById("btnConfirmCalculate");
+    const originalContent = btnConfirm.innerHTML;
+
+    try {
+      btnConfirm.disabled = true;
+      btnConfirm.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Đang tính toán...`;
+
+      const response = await fetch(
+        `${contextPath}api/depreciation/calculate-all?month=${month}&year=${year}`,
+        {
+          method: "POST",
+        },
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || "Lỗi khi tính toán khấu hao");
+      }
+
+      const result = await response.json();
+      alert(
+        `✅ Thành công! Đã tính khấu hao cho ${result.totalCalculated} tài sản.`,
+      );
+
+      // Close modal
+      const modal = bootstrap.Modal.getInstance(
+        document.getElementById("calculateDepreciationModal"),
+      );
+      if (modal) {
+        modal.hide();
+      }
+
+      // Reload data if the calculated year matches current filter
+      const filterYear = document.getElementById("filterYear").value;
+      if (filterYear == year) {
+        this.loadReportData(year);
+      } else {
+        document.getElementById("filterYear").value = year;
+        this.loadReportData(year);
+      }
+    } catch (error) {
+      console.error("Calculate Error:", error);
+      alert("❌ Lỗi: " + error.message);
+    } finally {
+      btnConfirm.disabled = false;
+      btnConfirm.innerHTML = originalContent;
+    }
   }
 
   /**

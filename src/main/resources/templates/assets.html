@@ -112,14 +112,26 @@
                     class="form-label text-muted fw-semibold"
                     >Tên hoặc Mã tài sản</label
                   >
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="searchKeyword"
-                    name="keyword"
-                    th:value="${keyword}"
-                    placeholder="Nhập từ khóa cần tìm..."
-                  />
+                  <div class="input-group">
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="searchKeyword"
+                      name="keyword"
+                      th:value="${keyword}"
+                      placeholder="Nhập mã hoặc tên tài sản..."
+                    />
+                    <button
+                      class="btn btn-outline-secondary"
+                      type="button"
+                      id="btnScanQR"
+                      data-bs-toggle="modal"
+                      data-bs-target="#qrScannerModal"
+                      title="Quét mã QR"
+                    >
+                      <i class="fas fa-qrcode"></i> Quét
+                    </button>
+                  </div>
                 </div>
                 <div class="col-md-3">
                   <label
@@ -322,6 +334,47 @@
                 ></strong>
               </small>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Quét QR -->
+    <div
+      class="modal fade"
+      id="qrScannerModal"
+      tabindex="-1"
+      aria-labelledby="qrScannerModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header bg-dark text-white">
+            <h5 class="modal-title" id="qrScannerModalLabel">
+              <i class="fas fa-qrcode"></i> Quét mã QR
+            </h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+              id="btnCloseQRModal"
+            ></button>
+          </div>
+          <div class="modal-body text-center p-0">
+            <div id="qr-reader" style="width: 100%; min-height: 250px"></div>
+            <div id="qr-reader-results" class="p-3 text-muted">
+              Vui lòng cấp quyền camera và đưa mã QR vào khung hình.
+            </div>
+          </div>
+          <div class="modal-footer justify-content-center bg-light">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Hủy
+            </button>
           </div>
         </div>
       </div>
@@ -647,6 +700,12 @@
 
     <!-- Bootstrap 5 JS Bundle từ CDN -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Thư viện quét mã QR -->
+    <script
+      src="https://unpkg.com/html5-qrcode"
+      type="text/javascript"
+    ></script>
 
     <!-- Custom JS - Thymeleaf resource syntax -->
     <script th:inline="javascript">

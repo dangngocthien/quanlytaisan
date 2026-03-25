@@ -1,9 +1,9 @@
 # Hệ thống Quản lý Tài sản (Asset Management System)
 
-**Phiên bản:** 0.0.4-PHASE4 (Phase 4 - Báo cáo Định giá & Khấu hao)  
-**Trạng thái:** Đang phát triển (In Development - Phase 4)  
+**Phiên bản:** 0.0.5-PHASE5 (Phase 5 - QRCode & Tra Cứu)  
+**Trạng thái:** Đang phát triển (In Development - Phase 5)  
 **Ngôn ngữ:** Tiếng Việt  
-**Commit hiện tại:** `TBD` - feat: phase 4 - implement valuation and depreciation reports
+**Commit hiện tại:** `TBD` - thêm chức năng quét mã qr
 
 ---
 
@@ -23,16 +23,16 @@ Hệ thống Quản lý Tài sản là một ứng dụng web được phát tri
 - ✅ **Phase 3 - Asset Transfer UI:** Modal form điều chuyển tài sản giữa phòng ban
 - ✅ **Phase 3 - History Table:** Bảng hiển thị lịch sử điều chuyển tài sản
 - ✅ **Tra cứu tài sản:** Bộ lọc tìm kiếm theo Mã/Tên tài sản, Loại tài sản, và Phòng ban
+- ✅ **Transfer Logic:** Xử lý logic điều chuyển (Asset Transfer) & lưu vết lịch sử (đã implement `@Transactional` và REST API đầy đủ)
+- ✅ **QR Code:** Tích hợp camera vào web để quét mã QR và tự động tra cứu tài sản
 
 ### 🔄 Đang phát triển (In Progress)
 
 - 🔄 **Form Validation:** Client-side & server-side, error messages chi tiết
 - 🔄 **Error Handling:** Professional notifications (Preparing Toastr system)
-- 🔄 **Transfer Logic:** Xử lý logic điều chuyển & lịch sử
 
 ### ❌ Chưa bắt đầu (TODO)
 
-- 🔲 **QR Code:** Tra cứu tài sản bằng QR code
 - 🔲 **Upload ảnh:** Lưu trữ & hiển thị ảnh tài sản
 - 🔲 **Excel export:** Xuất dữ liệu sang Excel
 - 🔲 **Authentication:** Login/Logout, phân quyền

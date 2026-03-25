@@ -73,16 +73,24 @@ public class DepreciationServiceImpl implements DepreciationService {
             throw new RuntimeException("Đã tính khấu hao cho tài sản này trong tháng " + month + "/" + year);
         }
 
-        // 5. Tính tiền khấu hao 1 tháng
-        BigDecimal purchasePrice = asset.getPurchasePrice();
+        // 5. Tính tiền khấu hao 1 tháng = Giá trị sản phẩm / Tuổi thọ
+        BigDecimal purchasePrice = asset.getPurchasePrice(); // Giá trị của sản phẩm
         BigDecimal depreciationAmount = purchasePrice
                 .divide(new BigDecimal(usefulLifeMonths), 2, RoundingMode.HALF_UP);
 
-        // 6. Tính giá trị còn lại
-        BigDecimal remainingValue = asset.getCurrentValue().subtract(depreciationAmount);
+        // 6. Tính tổng khấu hao lũy tích đến hiện tại
+        BigDecimal totalAccumulatedSoFar = depreciationHistoryRepository.findByAsset_Id(assetId)
+                .stream()
+                .map(DepreciationHistory::getDepreciationAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        // Giá trị còn lại = Giá mua - Khấu hao lũy tích (bao gồm cả tháng này)
+        BigDecimal newAccumulatedDepreciation = totalAccumulatedSoFar.add(depreciationAmount);
+        BigDecimal remainingValue = purchasePrice.subtract(newAccumulatedDepreciation);
         
         // Đảm bảo giá trị còn lại không âm
         if (remainingValue.compareTo(BigDecimal.ZERO) < 0) {
+            depreciationAmount = purchasePrice.subtract(totalAccumulatedSoFar); // khấu hao nốt phần còn lại
             remainingValue = BigDecimal.ZERO;
         }
 

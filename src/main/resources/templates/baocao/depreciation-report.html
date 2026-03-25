@@ -96,6 +96,16 @@
             <h1 class="h2 fw-bold">
               <i class="fas fa-chart-line"></i> Báo cáo Khấu hao Tài sản
             </h1>
+            <div>
+              <button
+                class="btn btn-primary me-2"
+                id="btnShowCalculateModal"
+                data-bs-toggle="modal"
+                data-bs-target="#calculateDepreciationModal"
+              >
+                <i class="fas fa-calculator"></i> Tính khấu hao tất cả
+              </button>
+            </div>
           </div>
 
           <!-- FILTER SECTION -->
@@ -238,6 +248,96 @@
                 Tổng số bản ghi: <strong id="totalRecords">0</strong>
               </small>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CALCULATE DEPRECIATION MODAL -->
+    <div
+      class="modal fade"
+      id="calculateDepreciationModal"
+      tabindex="-1"
+      aria-labelledby="calculateDepreciationModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title" id="calculateDepreciationModalLabel">
+              <i class="fas fa-calculator me-2"></i>Tính khấu hao toàn bộ tài
+              sản
+            </h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p class="text-muted mb-4">
+              Hệ thống sẽ tính toán khấu hao cho tất cả các tài sản đang hoạt
+              động trong kỳ chọn dưới đây. Nếu kỳ này đã tính, dữ liệu sẽ được
+              cập nhật lại.
+            </p>
+            <form id="calculateDepreciationForm">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="calcMonth" class="form-label fw-semibold"
+                    >Tháng <span class="text-danger">*</span></label
+                  >
+                  <select class="form-select" id="calcMonth" required>
+                    <option value="" disabled selected>Chọn tháng</option>
+                    <option value="1">Tháng 1</option>
+                    <option value="2">Tháng 2</option>
+                    <option value="3">Tháng 3</option>
+                    <option value="4">Tháng 4</option>
+                    <option value="5">Tháng 5</option>
+                    <option value="6">Tháng 6</option>
+                    <option value="7">Tháng 7</option>
+                    <option value="8">Tháng 8</option>
+                    <option value="9">Tháng 9</option>
+                    <option value="10">Tháng 10</option>
+                    <option value="11">Tháng 11</option>
+                    <option value="12">Tháng 12</option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label for="calcYear" class="form-label fw-semibold"
+                    >Năm <span class="text-danger">*</span></label
+                  >
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="calcYear"
+                    min="2000"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="alert alert-info mt-3 mb-0">
+                <i class="fas fa-info-circle me-1"></i>
+                Sau khi tính xong, báo cáo sẽ tự động tải lại dữ liệu của năm
+                tương ứng.
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer bg-light">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              <i class="fas fa-times me-1"></i> Đóng
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              id="btnConfirmCalculate"
+            >
+              <i class="fas fa-check me-1"></i> Thực hiện tính
+            </button>
           </div>
         </div>
       </div>
