@@ -177,18 +177,34 @@
                       <!-- Thao tác -->
                       <td class="text-center">
                         <button
+                          class="btn btn-sm btn-info btn-history-asset"
+                          title="Lịch sử điều chuyển"
+                          th:data-asset-id="${asset.id}"
+                        >
+                          <i class="fas fa-history"></i>
+                        </button>
+                        <button
+                          class="btn btn-sm btn-primary btn-transfer-asset"
+                          title="Điều chuyển"
+                          th:data-asset-id="${asset.id}"
+                          th:data-asset-name="${asset.name}"
+                          th:data-current-dept-id="${asset.currentDepartmentId}"
+                        >
+                          <i class="fas fa-exchange-alt"></i>
+                        </button>
+                        <button
                           class="btn btn-sm btn-warning btn-edit-asset"
                           title="Sửa"
                           th:data-asset-id="${asset.id}"
                         >
-                          <i class="fas fa-edit"></i> Sửa
+                          <i class="fas fa-edit"></i>
                         </button>
                         <button
                           class="btn btn-sm btn-danger btn-delete-asset"
                           title="Xóa"
                           th:data-asset-id="${asset.id}"
                         >
-                          <i class="fas fa-trash"></i> Xóa
+                          <i class="fas fa-trash"></i>
                         </button>
                       </td>
                     </tr>
@@ -402,6 +418,134 @@
       </div>
     </div>
 
+    <!-- Modal Lịch sử Điều chuyển -->
+    <div class="modal fade" id="historyModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header bg-info text-white">
+            <h5 class="modal-title">
+              <i class="fas fa-history"></i> Lịch Sử Điều Chuyển
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="table-responsive">
+              <table
+                class="table table-bordered table-striped"
+                id="historyTable"
+              >
+                <thead class="table-light">
+                  <tr>
+                    <th>Ngày BC</th>
+                    <th>Lý do</th>
+                    <th>Phòng ban cũ</th>
+                    <th>Phòng ban mới</th>
+                    <th>Người thực hiện</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Dữ liệu lịch sử sẽ được render bằng JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Điều chuyển -->
+    <div class="modal fade" id="transferModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title">
+              <i class="fas fa-exchange-alt"></i> Điều Chuyển Tài Sản
+            </h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="transferForm">
+              <input type="hidden" id="transferAssetId" />
+              <input type="hidden" id="transferFromDeptId" />
+
+              <div class="mb-3">
+                <label class="form-label fw-bold">Tài sản</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="transferAssetName"
+                  readonly
+                />
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label fw-bold">Chuyển đến Phòng ban</label>
+                <select class="form-select" id="transferToDeptId" required>
+                  <option value="">-- Chọn phòng ban nhận --</option>
+                  <option
+                    th:each="dept : ${departments}"
+                    th:value="${dept.id}"
+                    th:text="${dept.name}"
+                  ></option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label fw-bold">Ngày điều chuyển</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="transferDate"
+                  required
+                />
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label fw-bold">Người thực hiện</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="transferBy"
+                  required
+                  placeholder="Nhập tên người thực hiện"
+                />
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label fw-bold">Lý do</label>
+                <textarea
+                  class="form-control"
+                  id="transferReason"
+                  rows="3"
+                  placeholder="Nhập lý do điều chuyển"
+                ></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer bg-light">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Đóng
+            </button>
+            <button type="button" class="btn btn-primary" id="btnSaveTransfer">
+              <i class="fas fa-check"></i> Xác nhận
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Bootstrap 5 JS Bundle từ CDN -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -416,6 +560,3 @@
     <script th:src="@{/js/asset.js}"></script>
   </body>
 </html>
-
-
-

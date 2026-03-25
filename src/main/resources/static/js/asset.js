@@ -60,14 +60,16 @@ class AssetManager {
     if (modalElement) {
       this.modal = new bootstrap.Modal(modalElement);
     }
-  }
 
-  /**
-   * Attach all event listeners
-   * Using event delegation for better performance
-   */
-  attachEventListeners() {
-    // Button: Add Asset
+    const transferModalEl = document.getElementById("transferModal");
+    if (transferModalEl) {
+      this.transferModal = new bootstrap.Modal(transferModalEl);
+    }
+
+    const historyModalEl = document.getElementById("historyModal");
+    if (historyModalEl) {
+      this.historyModal = new bootstrap.Modal(historyModalEl);
+    }
     document.addEventListener("click", (e) => {
       if (e.target.closest("#btnAddAsset")) {
         this.handleAddAsset();
@@ -96,6 +98,33 @@ class AssetManager {
       if (deleteBtn) {
         const assetId = deleteBtn.getAttribute("data-asset-id");
         this.handleDeleteAsset(assetId);
+      }
+    });
+
+    // Button: Transfer Asset
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest(".btn-transfer-asset");
+      if (btn) {
+        const assetId = btn.getAttribute("data-asset-id");
+        const assetName = btn.getAttribute("data-asset-name");
+        const currentDeptId = btn.getAttribute("data-current-dept-id");
+        this.openTransferModal(assetId, assetName, currentDeptId);
+      }
+    });
+
+    // Button: History Asset
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest(".btn-history-asset");
+      if (btn) {
+        const assetId = btn.getAttribute("data-asset-id");
+        this.openHistoryModal(assetId);
+      }
+    });
+
+    // Button: Save Transfer
+    document.addEventListener("click", (e) => {
+      if (e.target.closest("#btnSaveTransfer")) {
+        this.handleSaveTransfer();
       }
     });
 
@@ -405,6 +434,107 @@ class AssetManager {
     row.classList.add("table-active");
   }
 
+  // ==========================================
+  // TRANSFER & HISTORY (PHASE 3)
+  // ==========================================
+
+  openTransferModal(assetId, assetName, currentDeptId) {
+    document.getElementById("transferForm").reset();
+    document.getElementById("transferAssetId").value = assetId;
+    document.getElementById("transferAssetName").value = assetName || "";
+    document.getElementById("transferFromDeptId").value = currentDeptId || "";
+
+    // Set default date to today
+    document.getElementById("transferDate").value = new Date()
+      .toISOString()
+      .split("T")[0];
+
+    this.transferModal.show();
+  }
+
+  handleSaveTransfer() {
+    const assetId = document.getElementById("transferAssetId").value;
+    const fromDeptId = document.getElementById("transferFromDeptId").value;
+    const toDeptId = document.getElementById("transferToDeptId").value;
+    const transferDate = document.getElementById("transferDate").value;
+    const transferBy = document.getElementById("transferBy").value;
+    const reason = document.getElementById("transferReason").value;
+
+    if (!toDeptId || !transferDate || !transferBy) {
+      this.showError(
+        "Vui lòng nhập đầy đủ phòng ban nhận, ngày và người thực hiện",
+      );
+      return;
+    }
+
+    const payload = {
+      assetId: parseInt(assetId),
+      fromDepartmentId: fromDeptId ? parseInt(fromDeptId) : null,
+      toDepartmentId: parseInt(toDeptId),
+      transferDate: transferDate,
+      transferBy: transferBy,
+      reason: reason,
+    };
+
+    this.showLoading(true);
+    fetch(contextPath + "api/transfers", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Chuyển tài sản thất bại");
+        return res.json();
+      })
+      .then((data) => {
+        this.showSuccess("Điều chuyển tài sản thành công!");
+        this.transferModal.hide();
+        setTimeout(() => window.location.reload(), 1000);
+      })
+      .catch((err) => {
+        this.showError(err.message);
+      })
+      .finally(() => this.showLoading(false));
+  }
+
+  openHistoryModal(assetId) {
+    this.historyModal.show();
+    const tbody = document.querySelector("#historyTable tbody");
+    tbody.innerHTML =
+      "<tr><td colspan='5' class='text-center'>Đang tải dữ liệu...</td></tr>";
+
+    fetch(contextPath + "api/transfers/asset/" + assetId)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.length === 0) {
+          tbody.innerHTML =
+            "<tr><td colspan='5' class='text-center'>Chưa có lịch sử điều chuyển nào</td></tr>";
+          return;
+        }
+
+        tbody.innerHTML = "";
+        data.forEach((t) => {
+          const fromDept = t.fromDepartmentName || "Khởi tạo/Mua mới";
+          const toDept = t.toDepartmentName || "-";
+          const date = formatDate(t.transferDate);
+
+          tbody.innerHTML += `
+          <tr>
+            <td>${date}</td>
+            <td>${t.reason || "-"}</td>
+            <td><span class='badge bg-secondary'>${fromDept}</span></td>
+            <td><span class='badge bg-success'>${toDept}</span></td>
+            <td>${t.transferBy || "-"}</td>
+          </tr>
+        `;
+        });
+      })
+      .catch((err) => {
+        tbody.innerHTML =
+          "<tr><td colspan='5' class='text-center text-danger'>Lỗi tải dữ liệu</td></tr>";
+      });
+  }
+
   /**
    * Show success notification
    */
@@ -481,6 +611,3 @@ function formatDate(dateString) {
   const options = { year: "numeric", month: "2-digit", day: "2-digit" };
   return new Date(dateString).toLocaleDateString("vi-VN", options);
 }
-
-
-
