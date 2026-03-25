@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng nhập hệ thống | Quản lý Tài sản</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- FontAwesome Icons -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      .login-card {
+        background-color: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+        width: 100%;
+        max-width: 450px;
+      }
+
+      .login-header {
+        background-color: #f8f9fa;
+        padding: 30px 20px;
+        text-align: center;
+        border-bottom: 1px solid #eeeeee;
+      }
+
+      .login-header i {
+        font-size: 3rem;
+        color: #667eea;
+        margin-bottom: 15px;
+      }
+
+      .login-body {
+        padding: 40px 30px;
+      }
+
+      .btn-custom {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 12px;
+        font-weight: 600;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+      }
+
+      .btn-custom:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        color: #ffffff;
+      }
+
+      .form-control {
+        padding: 12px 15px;
+        border-radius: 8px;
+        border: 1px solid #dee2e6;
+      }
+
+      .form-control:focus {
+        box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
+        border-color: #667eea;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-card mx-3">
+      <div class="login-header">
+        <i class="fas fa-boxes-packing"></i>
+        <h4 class="mb-0 fw-bold text-dark">HỆ THỐNG QUẢN LÝ TÀI SẢN</h4>
+        <p class="text-muted mt-2 mb-0">Đăng nhập để tiếp tục</p>
+      </div>
+
+      <div class="login-body">
+        <!-- Hiển thị thông báo khi có lỗi đăng nhập -->
+        <div
+          th:if="${param.error}"
+          class="alert alert-danger d-flex align-items-center mb-4"
+          role="alert"
+        >
+          <i class="fas fa-exclamation-triangle me-2"></i>
+          <div>Tên đăng nhập hoặc mật khẩu không chính xác!</div>
+        </div>
+
+        <!-- Hiển thị thông báo khi đăng xuất thành công -->
+        <div
+          th:if="${param.logout}"
+          class="alert alert-success d-flex align-items-center mb-4"
+          role="alert"
+        >
+          <i class="fas fa-check-circle me-2"></i>
+          <div>Bạn đã đăng xuất thành công!</div>
+        </div>
+
+        <!-- Form xử lý bởi Spring Security (/login với method POST) -->
+        <form th:action="@{/login}" method="post">
+          <div class="mb-4">
+            <label for="username" class="form-label fw-semibold text-secondary"
+              >Tên đăng nhập</label
+            >
+            <div class="input-group">
+              <span class="input-group-text bg-white border-end-0"
+                ><i class="fas fa-user text-muted"></i
+              ></span>
+              <input
+                type="text"
+                class="form-control border-start-0 ps-0"
+                id="username"
+                name="username"
+                placeholder="Nhập tên đăng nhập (VD: admin)"
+                required
+                autofocus
+              />
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label for="password" class="form-label fw-semibold text-secondary"
+              >Mật khẩu</label
+            >
+            <div class="input-group">
+              <span class="input-group-text bg-white border-end-0"
+                ><i class="fas fa-lock text-muted"></i
+              ></span>
+              <input
+                type="password"
+                class="form-control border-start-0 ps-0"
+                id="password"
+                name="password"
+                placeholder="Nhập mật khẩu"
+                required
+              />
+            </div>
+          </div>
+
+          <!-- Remember me nếu cần thiết -->
+          <div class="mb-4 form-check">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              id="remember-me"
+              name="remember-me"
+            />
+            <label class="form-check-label text-secondary" for="remember-me"
+              >Ghi nhớ đăng nhập</label
+            >
+          </div>
+
+          <button type="submit" class="btn btn-custom w-100 mb-3">
+            ĐĂNG NHẬP <i class="fas fa-sign-in-alt ms-2"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
