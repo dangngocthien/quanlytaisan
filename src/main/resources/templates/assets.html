@@ -287,6 +287,15 @@
 
                       <!-- Thao tác -->
                       <td class="text-center">
+                        <!-- Nút hiển thị mã QR -->
+                        <button
+                          class="btn btn-sm btn-dark btn-show-qr"
+                          title="Hiển thị mã QR"
+                          th:data-asset-code="${asset.assetCode}"
+                          th:data-asset-name="${asset.name}"
+                        >
+                          <i class="fas fa-qrcode"></i>
+                        </button>
                         <button
                           class="btn btn-sm btn-info btn-history-asset"
                           title="Lịch sử điều chuyển"
@@ -448,8 +457,34 @@
                   </select>
                 </div>
 
+                <!-- QR Code Display (Only visible when editing) -->
+                <div
+                  class="col-md-6 text-center"
+                  id="qrContainer"
+                  style="display: none"
+                >
+                  <label class="form-label fw-bold w-100"
+                    >Mã QR (Dán lên tài sản)</label
+                  >
+                  <div
+                    class="border rounded p-2 d-inline-block bg-white shadow-sm"
+                    style="min-width: 130px; min-height: 130px"
+                  >
+                    <div id="qrcode-display"></div>
+                  </div>
+                  <div class="mt-2">
+                    <button
+                      type="button"
+                      id="btnDownloadQR"
+                      class="btn btn-sm btn-outline-primary"
+                    >
+                      <i class="fas fa-download"></i> Tải ảnh QR
+                    </button>
+                  </div>
+                </div>
+
                 <!-- Trạng thái -->
-                <div class="col-md-6">
+                <div class="col-md-6" id="statusContainer">
                   <label class="form-label fw-bold"
                     >Trạng thái <span class="text-danger">*</span></label
                   >
@@ -706,6 +741,9 @@
       src="https://unpkg.com/html5-qrcode"
       type="text/javascript"
     ></script>
+
+    <!-- Thư viện tạo mã QR (qrcode.js) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
     <!-- Custom JS - Thymeleaf resource syntax -->
     <script th:inline="javascript">

@@ -83,9 +83,15 @@ class AssetManager {
     // để tránh các nút xin quyền rườm rà, ép nó chạy thẳng camera
     this.html5QrcodeScanner = new Html5Qrcode("qr-reader");
 
-    const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+    // Tăng fps và cải thiện format cho dễ nhận diện trên mobile/webcam
+    const config = {
+      fps: 15,
+      qrbox: { width: 250, height: 250 },
+      aspectRatio: 1.0,
+      disableFlip: false, // Cho phép lật camera nếu cần
+    };
 
-    // Bắt đầu quét với camera mặc định mặt sau (environment)
+    // Quét với bất kỳ camera nào ban đầu mà nó tìm dc (hỗ trợ tốt hơn cho laptop k có camera sau)
     this.html5QrcodeScanner
       .start(
         { facingMode: "environment" },
@@ -95,11 +101,28 @@ class AssetManager {
         (errorMessage) => this.onScanFailure(errorMessage),
       )
       .catch((err) => {
-        console.error(`Error starting QR Scanner: ${err}`);
-        if (resultsDiv) {
-          resultsDiv.style.display = "block";
-          resultsDiv.innerHTML = `<span class="text-danger"><i class="fas fa-exclamation-triangle"></i> Lỗi Camera: ${err.message || "Không truy cập được camera. Vui lòng cấp quyền."}</span>`;
-        }
+        console.warn(`Environment camera fail fallback to videoId...`, err);
+        // Fallback: nếu k tìm thấy camera sau (thường là máy tính bàn/laptop), xin bật cam mặc định
+        Html5Qrcode.getCameras()
+          .then((devices) => {
+            if (devices && devices.length) {
+              var cameraId = devices[0].id;
+              this.html5QrcodeScanner.start(
+                cameraId,
+                config,
+                (decodedText, decodedResult) =>
+                  this.onScanSuccess(decodedText, decodedResult),
+                (errorMessage) => this.onScanFailure(errorMessage),
+              );
+            }
+          })
+          .catch((err2) => {
+            console.error(`Error starting QR Scanner: ${err2}`);
+            if (resultsDiv) {
+              resultsDiv.style.display = "block";
+              resultsDiv.innerHTML = `<span class="text-danger"><i class="fas fa-exclamation-triangle"></i> Lỗi Camera: ${err2.message || "Không truy cập được camera. Vui lòng cấp quyền."}</span>`;
+            }
+          });
       });
   }
 
@@ -168,8 +191,24 @@ class AssetManager {
    */
   attachEventListeners() {
     document.addEventListener("click", (e) => {
+      // Nút Hiện QR
+      const showQrBtn = e.target.closest(".btn-show-qr");
+      if (showQrBtn) {
+        const assetCode = showQrBtn.getAttribute("data-asset-code");
+        const assetName = showQrBtn.getAttribute("data-asset-name");
+        this.generateQRCode(assetCode, assetName);
+        return;
+      }
+
       if (e.target.closest("#btnAddAsset")) {
         this.handleAddAsset();
+      }
+    });
+
+    // Download QR Code Event
+    document.addEventListener("click", (e) => {
+      if (e.target.closest("#btnDownloadQR")) {
+        this.downloadQRCode();
       }
     });
 
@@ -242,6 +281,12 @@ class AssetManager {
 
     this.isEditMode = false;
     this.resetForm();
+
+    // Hide QR section when adding new
+    const qrContainer = document.getElementById("qrContainer");
+    if (qrContainer) {
+      qrContainer.style.display = "none";
+    }
 
     document.getElementById("modalAssetTitle").innerHTML =
       '<i class="fas fa-plus-circle"></i> Thêm Tài Sản Mới';
@@ -408,6 +453,91 @@ class AssetManager {
       data.warrantyProvider || "";
     document.getElementById("warrantyExpiryDate").value =
       data.warrantyExpiryDate || "";
+
+    // Hiển thị và tạo mã QR
+    if (data.assetCode) {
+      this.generateQRCodeInForm(data.assetCode);
+    }
+  }
+
+  generateQRCodeInForm(assetCode) {
+    const qrContainer = document.getElementById("qrContainer");
+    const qrcodeDisplay = document.getElementById("qrcode-display");
+
+    if (qrContainer && qrcodeDisplay) {
+      qrContainer.style.display = "block";
+      qrcodeDisplay.innerHTML = ""; // Xóa QR cũ
+
+      // Tạo một div bọc ngoài để làm viền trắng (padding)
+      const qrWrapper = document.createElement("div");
+      qrWrapper.style.padding = "20px";
+      qrWrapper.style.backgroundColor = "#ffffff";
+      qrWrapper.style.display = "inline-block";
+      qrcodeDisplay.appendChild(qrWrapper);
+
+      // Chỉnh thông số lưới và cấp độ sửa lỗi
+      new QRCode(qrWrapper, {
+        text: assetCode,
+        width: 200,
+        height: 200,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.M,
+      });
+    }
+  }
+
+  /**
+   * Bấm nút hiển thị mã QR trên bảng
+   */
+  generateQRCode(assetCode, assetName) {
+    let assetId = null;
+    document.querySelectorAll(".asset-row").forEach((tr) => {
+      const codeSpan = tr.querySelector("td:nth-child(2) span");
+      if (codeSpan && codeSpan.textContent.trim() === assetCode) {
+        assetId = tr.getAttribute("data-asset-id");
+      }
+    });
+
+    if (assetId) {
+      this.handleEditAsset(assetId);
+    }
+  }
+
+  /**
+   * Tính năng tải ảnh QR về máy
+   */
+  downloadQRCode() {
+    // Tìm thẻ canvas sinh ra bởi qrcode.js
+    const qrCanvas = document.querySelector("#qrcode-display canvas");
+    if (!qrCanvas) return;
+
+    // Tạo Canvas phụ để chèn viền (padding) cùng nền trắng giúp ảnh không bị trong suốt, bị đen
+    const padding = 20;
+    const downloadCanvas = document.createElement("canvas");
+    downloadCanvas.width = qrCanvas.width + padding * 2;
+    downloadCanvas.height = qrCanvas.height + padding * 2;
+    const ctx = downloadCanvas.getContext("2d");
+
+    // Tô nền trắng chuẩn
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, downloadCanvas.width, downloadCanvas.height);
+
+    // Chèn mã QR gốc lên trên (giữa padding)
+    ctx.drawImage(qrCanvas, padding, padding);
+
+    // Đặt tên tệp theo mã
+    const assetCode = document.getElementById("assetCode").value || "QR";
+    const link = document.createElement("a");
+
+    // Xuất ra hình định dạng png
+    link.href = downloadCanvas.toDataURL("image/png");
+    link.download = `QR_${assetCode}.png`;
+
+    // Trigger download
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 
   /**

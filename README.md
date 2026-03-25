@@ -24,7 +24,9 @@ Hệ thống Quản lý Tài sản là một ứng dụng web được phát tri
 - ✅ **Phase 3 - History Table:** Bảng hiển thị lịch sử điều chuyển tài sản
 - ✅ **Tra cứu tài sản:** Bộ lọc tìm kiếm theo Mã/Tên tài sản, Loại tài sản, và Phòng ban
 - ✅ **Transfer Logic:** Xử lý logic điều chuyển (Asset Transfer) & lưu vết lịch sử (đã implement `@Transactional` và REST API đầy đủ)
-- ✅ **QR Code:** Tích hợp camera vào web để quét mã QR và tự động tra cứu tài sản
+- ✅ **Quét QR Code:** Tích hợp camera vào web để quét mã QR và tự động điền mã tra cứu tài sản.
+- ✅ **Sinh mã QR:** Tự động sinh mã QR cho từng tài sản với thiết kế chuẩn (có viền trắng, độ tương phản cao) giúp máy quét dễ đọc.
+- ✅ **Tải mã QR:** Tính năng tải mã QR về máy tính định dạng PNG với phông nền trắng hoàn thiện.
 
 ### 🔄 Đang phát triển (In Progress)
 
