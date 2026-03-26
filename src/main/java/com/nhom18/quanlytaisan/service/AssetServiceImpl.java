@@ -82,6 +82,19 @@ public class AssetServiceImpl implements AssetService {
         asset.setWarrantyProvider(assetDTO.getWarrantyProvider());
         asset.setWarrantyExpiryDate(assetDTO.getWarrantyExpiryDate());
 
+        // Update maintenance cycle and auto-calculate dates
+        if (assetDTO.getMaintenanceCycle() != null && assetDTO.getMaintenanceCycle() > 0 && assetDTO.getPurchaseDate() != null) {
+            asset.setMaintenanceCycle(assetDTO.getMaintenanceCycle());
+            if (asset.getLastMaintenanceDate() == null) {
+                asset.setLastMaintenanceDate(assetDTO.getPurchaseDate());
+            }
+            asset.setNextMaintenanceDate(asset.getLastMaintenanceDate().plusMonths(assetDTO.getMaintenanceCycle()));
+        } else {
+            asset.setMaintenanceCycle(null);
+            asset.setLastMaintenanceDate(null);
+            asset.setNextMaintenanceDate(null);
+        }
+
         // Nếu asset code thay đổi, kiểm tra xem code mới đã tồn tại không
         if (!asset.getAssetCode().equals(assetDTO.getAssetCode())) {
             if (assetRepository.existsByAssetCode(assetDTO.getAssetCode())) {
@@ -188,6 +201,10 @@ public class AssetServiceImpl implements AssetService {
         dto.setStatus(asset.getStatus());
         dto.setWarrantyProvider(asset.getWarrantyProvider());
         dto.setWarrantyExpiryDate(asset.getWarrantyExpiryDate());
+        
+        dto.setMaintenanceCycle(asset.getMaintenanceCycle());
+        dto.setLastMaintenanceDate(asset.getLastMaintenanceDate());
+        dto.setNextMaintenanceDate(asset.getNextMaintenanceDate());
 
         // Map Category Info
         if (asset.getCategory() != null) {
@@ -226,6 +243,17 @@ public class AssetServiceImpl implements AssetService {
         asset.setWarrantyProvider(dto.getWarrantyProvider());
         asset.setWarrantyExpiryDate(dto.getWarrantyExpiryDate());
         asset.setCreatedAt(java.time.LocalDateTime.now());
+        
+        // Auto-calculate maintenance dates if cycle is present and purchaseDate is present
+        if (dto.getMaintenanceCycle() != null && dto.getMaintenanceCycle() > 0 && dto.getPurchaseDate() != null) {
+            asset.setMaintenanceCycle(dto.getMaintenanceCycle());
+            asset.setLastMaintenanceDate(dto.getPurchaseDate());
+            asset.setNextMaintenanceDate(dto.getPurchaseDate().plusMonths(dto.getMaintenanceCycle()));
+        } else {
+            asset.setMaintenanceCycle(dto.getMaintenanceCycle());
+            asset.setLastMaintenanceDate(dto.getLastMaintenanceDate());
+            asset.setNextMaintenanceDate(dto.getNextMaintenanceDate());
+        }
 
         // Set Category nếu có categoryId
         if (dto.getCategoryId() != null) {

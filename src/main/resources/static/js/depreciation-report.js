@@ -47,6 +47,11 @@ class DepreciationReportManager {
       btnExport.addEventListener("click", () => this.handleExportExcel());
     }
 
+    const btnExportPdf = document.getElementById("btnExportPdf");
+    if (btnExportPdf) {
+      btnExportPdf.addEventListener("click", () => this.handleExportPdf());
+    }
+
     const btnConfirmCalculate = document.getElementById("btnConfirmCalculate");
     if (btnConfirmCalculate) {
       btnConfirmCalculate.addEventListener("click", () =>
@@ -211,6 +216,42 @@ class DepreciationReportManager {
 
     // Construct download URL
     const downloadUrl = `${DepreciationReportManager.CONFIG.API_BASE}/depreciation-summary/${year}/export`;
+
+    // Initiate download via hidden iframe or anchor tag
+    const a = document.createElement("a");
+    a.style.display = "none";
+    a.href = downloadUrl;
+
+    // Clean up after download triggers
+    document.body.appendChild(a);
+    a.click();
+
+    setTimeout(() => {
+      document.body.removeChild(a);
+      btnExport.disabled = false;
+      btnExport.innerHTML = originalContent;
+    }, 1500);
+  }
+
+  /**
+   * Handle Export PDF
+   */
+  handleExportPdf() {
+    const year = document.getElementById("filterYear").value;
+    if (!year) {
+      alert("Vui lòng nhập năm để xuất dữ liệu.");
+      return;
+    }
+
+    const btnExport = document.getElementById("btnExportPdf");
+    const originalContent = btnExport.innerHTML;
+
+    // Disable button, show loading
+    btnExport.disabled = true;
+    btnExport.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Đang xuất PDF...`;
+
+    // Construct download URL
+    const downloadUrl = `${DepreciationReportManager.CONFIG.API_BASE}/depreciation-summary/${year}/export-pdf`;
 
     // Initiate download via hidden iframe or anchor tag
     const a = document.createElement("a");

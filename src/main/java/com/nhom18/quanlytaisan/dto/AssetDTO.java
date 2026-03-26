@@ -17,6 +17,9 @@ public class AssetDTO {
     private String warrantyProvider;
     private LocalDate warrantyExpiryDate;
     private Integer usefulLifeMonths = 36; // Tuổi thọ hữu ích (tháng), mặc định 36
+    private Integer maintenanceCycle;
+    private LocalDate lastMaintenanceDate;
+    private LocalDate nextMaintenanceDate;
 
     // Foreign Key Fields
     private Long categoryId;
@@ -233,6 +236,30 @@ public class AssetDTO {
 
     public void setUsefulLifeMonths(Integer usefulLifeMonths) {
         this.usefulLifeMonths = usefulLifeMonths != null ? usefulLifeMonths : 36;
+    }
+
+    public Integer getMaintenanceCycle() {
+        return maintenanceCycle;
+    }
+
+    public void setMaintenanceCycle(Integer maintenanceCycle) {
+        this.maintenanceCycle = maintenanceCycle;
+    }
+
+    public LocalDate getLastMaintenanceDate() {
+        return lastMaintenanceDate;
+    }
+
+    public void setLastMaintenanceDate(LocalDate lastMaintenanceDate) {
+        this.lastMaintenanceDate = lastMaintenanceDate;
+    }
+
+    public LocalDate getNextMaintenanceDate() {
+        return nextMaintenanceDate;
+    }
+
+    public void setNextMaintenanceDate(LocalDate nextMaintenanceDate) {
+        this.nextMaintenanceDate = nextMaintenanceDate;
     }
 
     @Override

@@ -28,8 +28,9 @@ Hệ thống Quản lý Tài sản là một ứng dụng web được phát tri
 - ✅ **Sinh mã QR:** Tự động sinh mã QR cho từng tài sản với thiết kế chuẩn (có viền trắng, độ tương phản cao) giúp máy quét dễ đọc.
 - ✅ **Tải mã QR:** Tính năng tải mã QR về máy tính định dạng PNG với phông nền trắng hoàn thiện.
 - ✅ **In tem mã tài sản:** Tự động tạo bản HTML/CSS dàn trang lưới A4 và in tem riêng lẻ qua popup cực kỳ tối ưu, tương thích cả máy in tem nhỏ lẫn máy in A4.
-  ✅ **Lưu hồ sơ bảo hành:** Quản lý lịch sử bảo hành, hình ảnh biên lai
+- ✅ **Lưu hồ sơ bảo hành:** Quản lý lịch sử bảo hành, hình ảnh biên lai
 - ✅ **Export báo cáo Excel/PDF:** Xuất báo cáo định giá tổng hợp, theo phòng ban và xuất báo cáo khấu hao tài sản
+- ✅ **Nhắc lịch bảo trì:** Tích hợp Background Scheduler kiểm tra tài sản sắp hết hạn bảo trì mỗi ngày, kèm theo đó là hệ thống Notifications đổ chuông báo trực tiếp trên giao diện Front-end.
 
 ### 🔄 Đang phát triển (In Progress)
 
@@ -39,7 +40,6 @@ Hệ thống Quản lý Tài sản là một ứng dụng web được phát tri
 
 - 🔲 **Upload ảnh:** Lưu trữ & hiển thị ảnh nguyên bản của tài sản
 - 🔲 **Authentication:** Login/Logout, phân quyền
-- 🔲 **Nhắc lịch bảo trì:** Hệ thống Quartz Scheduler
 - 🔲 **Dashboard phân quyền:** Dựa trên Role
 
 ---
@@ -736,7 +736,7 @@ src/main/java/com/nhom18/quanlytaisan/
 
 - [ ] **Phase 6: Tính năng nâng cao**
   - [x] QR Code sinh & in tem quét
-  - [ ] Export Excel danh sách tài sản
+  - [x] Export Excel danh sách tài sản
   - [x] Dashboard thống kê (Tài sản theo Phòng ban)
   - [x] Báo cáo khấu hao
   - [ ] Thông báo (Email/SMS) bảo trì sắp tới
@@ -847,7 +847,7 @@ kill -9 <PID>
 
 ## 📜 License
 
-Dự án này là tài sản của [Công ty/Tổ chức]. Cấm sao chép, sử dụng cho mục đích thương mại mà không được phép.
+Dự án này là tài sản của [nhóm18]. Cấm sao chép, sử dụng cho mục đích thương mại mà không được phép.
 
 ---
 

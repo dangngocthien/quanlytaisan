@@ -45,4 +45,9 @@ public interface AssetRepository extends JpaRepository<Asset, Long> {
     List<Asset> searchAssets(@org.springframework.data.repository.query.Param("keyword") String keyword,
                              @org.springframework.data.repository.query.Param("categoryId") Long categoryId,
                              @org.springframework.data.repository.query.Param("departmentId") Long departmentId);
+
+    /**
+     * Lấy danh sách tài sản sắp đến hạn bảo trì
+     */
+    List<Asset> findByNextMaintenanceDateBetween(java.time.LocalDate startDate, java.time.LocalDate endDate);
 }

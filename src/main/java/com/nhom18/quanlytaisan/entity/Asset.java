@@ -60,6 +60,15 @@ public class Asset {
     @Column(name = "useful_life_months", nullable = false)
     private Integer usefulLifeMonths = 36; // Mặc định: 36 tháng (3 năm)
 
+    @Column(name = "maintenance_cycle")
+    private Integer maintenanceCycle; // Chu kỳ bảo trì (tháng)
+
+    @Column(name = "last_maintenance_date")
+    private LocalDate lastMaintenanceDate; // Ngày bảo trì gần nhất
+
+    @Column(name = "next_maintenance_date")
+    private LocalDate nextMaintenanceDate; // Ngày bảo trì tiếp theo dự kiến
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -262,6 +271,30 @@ public class Asset {
 
     public void setUsefulLifeMonths(Integer usefulLifeMonths) {
         this.usefulLifeMonths = usefulLifeMonths != null ? usefulLifeMonths : 36;
+    }
+
+    public Integer getMaintenanceCycle() {
+        return maintenanceCycle;
+    }
+
+    public void setMaintenanceCycle(Integer maintenanceCycle) {
+        this.maintenanceCycle = maintenanceCycle;
+    }
+
+    public LocalDate getLastMaintenanceDate() {
+        return lastMaintenanceDate;
+    }
+
+    public void setLastMaintenanceDate(LocalDate lastMaintenanceDate) {
+        this.lastMaintenanceDate = lastMaintenanceDate;
+    }
+
+    public LocalDate getNextMaintenanceDate() {
+        return nextMaintenanceDate;
+    }
+
+    public void setNextMaintenanceDate(LocalDate nextMaintenanceDate) {
+        this.nextMaintenanceDate = nextMaintenanceDate;
     }
 
     @Override

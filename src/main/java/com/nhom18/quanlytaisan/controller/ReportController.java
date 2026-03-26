@@ -3,6 +3,7 @@ package com.nhom18.quanlytaisan.controller;
 import com.nhom18.quanlytaisan.dto.AssetDTO;
 import com.nhom18.quanlytaisan.dto.DepreciationHistoryDTO;
 import com.nhom18.quanlytaisan.service.ExcelExportService;
+import com.nhom18.quanlytaisan.service.PdfExportService;
 import com.nhom18.quanlytaisan.service.ReportService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -34,13 +35,15 @@ public class ReportController {
 
     private final ReportService reportService;
     private final ExcelExportService excelExportService;
+    private final PdfExportService pdfExportService;
 
     /**
      * Constructor injection - Senior Spring Boot practice
      */
-    public ReportController(ReportService reportService, ExcelExportService excelExportService) {
+    public ReportController(ReportService reportService, ExcelExportService excelExportService, PdfExportService pdfExportService) {
         this.reportService = reportService;
         this.excelExportService = excelExportService;
+        this.pdfExportService = pdfExportService;
     }
 
     // ============ PHASE 3: BASIC ASSET REPORTS ============
@@ -316,6 +319,26 @@ public class ReportController {
     }
 
     /**
+     * GET /api/reports/valuation/export-all-pdf
+     * Xuất báo cáo định giá toàn bộ tài sản ra PDF
+     */
+    @GetMapping("/valuation/export-all-pdf")
+    public ResponseEntity<byte[]> exportAllValuationReportPdf() {
+        try {
+            List<Map<String, Object>> reports = reportService.getAllValuationReports();
+            byte[] pdfContent = pdfExportService.exportValuationReport(reports, "BÁO CÁO ĐỊNH GIÁ TÀI SẢN TỔNG HỢP");
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.setContentDispositionFormData("attachment", "BaoCaoDinhGia_ToanBo_" + System.currentTimeMillis() + ".pdf");
+
+            return new ResponseEntity<>(pdfContent, headers, HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
      * GET /api/reports/department-valuation/{departmentId}/export
      * Xuất báo cáo định giá theo phòng ban ra Excel
      */
@@ -330,6 +353,26 @@ public class ReportController {
             headers.setContentDispositionFormData("attachment", "BaoCaoDinhGia_PhongBan_" + departmentId + "_" + System.currentTimeMillis() + ".xlsx");
 
             return new ResponseEntity<>(excelContent, headers, HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
+     * GET /api/reports/department-valuation/{departmentId}/export-pdf
+     * Xuất báo cáo định giá theo phòng ban ra PDF
+     */
+    @GetMapping("/department-valuation/{departmentId}/export-pdf")
+    public ResponseEntity<byte[]> exportDepartmentValuationReportPdf(@PathVariable Long departmentId) {
+        try {
+            List<Map<String, Object>> reports = reportService.getDepartmentValuationReport(departmentId);
+            byte[] pdfContent = pdfExportService.exportValuationReport(reports, "BÁO CÁO ĐỊNH GIÁ TÀI SẢN THEO PHÒNG BAN");
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.setContentDispositionFormData("attachment", "BaoCaoDinhGia_PhongBan_" + departmentId + "_" + System.currentTimeMillis() + ".pdf");
+
+            return new ResponseEntity<>(pdfContent, headers, HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -386,6 +429,26 @@ public class ReportController {
             headers.setContentDispositionFormData("attachment", "BaoCaoKhauHao_Nam_" + year + "_" + System.currentTimeMillis() + ".xlsx");
 
             return new ResponseEntity<>(excelContent, headers, HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
+     * GET /api/reports/depreciation-summary/{year}/export-pdf
+     * Xuất tóm tắt khấu hao năm ra file PDF
+     */
+    @GetMapping("/depreciation-summary/{year}/export-pdf")
+    public ResponseEntity<byte[]> exportDepreciationSummaryByYearPdf(@PathVariable Integer year) {
+        try {
+            Map<Integer, Map<String, Object>> summary = reportService.getDepreciationSummaryByYear(year);
+            byte[] pdfContent = pdfExportService.exportDepreciationSummary(summary, year, "BÁO CÁO TỔNG HỢP KHẤU HAO TÀI SẢN NĂM " + year);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.setContentDispositionFormData("attachment", "BaoCaoKhauHao_Nam_" + year + "_" + System.currentTimeMillis() + ".pdf");
+
+            return new ResponseEntity<>(pdfContent, headers, HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

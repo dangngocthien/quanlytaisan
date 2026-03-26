@@ -43,11 +43,15 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto">
-              <li class="nav-item">
-                <a class="nav-link" href="/baocao/department-dashboard" th:href="@{/baocao/department-dashboard}">
-                  <i class="fas fa-chart-pie"></i> Dashboard
-                </a>
-              </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                href="/baocao/department-dashboard"
+                th:href="@{/baocao/department-dashboard}"
+              >
+                <i class="fas fa-chart-pie"></i> Dashboard
+              </a>
+            </li>
             <li class="nav-item">
               <a class="nav-link" href="/phong-ban" th:href="@{/phong-ban}">
                 <i class="fas fa-door-open"></i> Phòng ban
@@ -159,9 +163,14 @@
               <h5 class="mb-0">
                 <i class="fas fa-list"></i> Danh sách Tài sản Định giá
               </h5>
-              <button id="btnExportExcel" class="btn btn-success btn-sm">
-                <i class="fas fa-file-excel"></i> Xuất Excel
-              </button>
+              <div>
+                <button id="btnExportExcel" class="btn btn-success btn-sm">
+                  <i class="fas fa-file-excel"></i> Xuất Excel
+                </button>
+                <button id="btnExportPdf" class="btn btn-danger btn-sm">
+                  <i class="fas fa-file-pdf"></i> Xuất PDF
+                </button>
+              </div>
             </div>
             <div class="card-body">
               <!-- Loading Spinner -->
@@ -222,7 +231,3 @@
     <script th:src="@{/js/valuation-report.js}"></script>
   </body>
 </html>
-
-
-
-

@@ -391,6 +391,8 @@ class AssetManager {
         document.getElementById("warrantyProvider").value?.trim() || null,
       warrantyExpiryDate:
         document.getElementById("warrantyExpiryDate").value || null,
+      maintenanceCycle:
+        document.getElementById("maintenanceCycle").value || null,
       currentDepartmentId: document.getElementById("currentDepartmentId").value,
     };
   }
@@ -456,6 +458,8 @@ class AssetManager {
       data.warrantyProvider || "";
     document.getElementById("warrantyExpiryDate").value =
       data.warrantyExpiryDate || "";
+    document.getElementById("maintenanceCycle").value =
+      data.maintenanceCycle || "";
 
     // Hiển thị và tạo mã QR
     if (data.assetCode) {
