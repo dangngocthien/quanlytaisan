@@ -28,12 +28,12 @@ Hệ thống Quản lý Tài sản là một ứng dụng web được phát tri
 - ✅ **Sinh mã QR:** Tự động sinh mã QR cho từng tài sản với thiết kế chuẩn (có viền trắng, độ tương phản cao) giúp máy quét dễ đọc.
 - ✅ **Tải mã QR:** Tính năng tải mã QR về máy tính định dạng PNG với phông nền trắng hoàn thiện.
 - ✅ **In tem mã tài sản:** Tự động tạo bản HTML/CSS dàn trang lưới A4 và in tem riêng lẻ qua popup cực kỳ tối ưu, tương thích cả máy in tem nhỏ lẫn máy in A4.
+  ✅ **Lưu hồ sơ bảo hành:** Quản lý lịch sử bảo hành, hình ảnh biên lai
+- ✅ **Export báo cáo Excel/PDF:** Xuất báo cáo định giá tổng hợp, theo phòng ban và xuất báo cáo khấu hao tài sản
 
 ### 🔄 Đang phát triển (In Progress)
 
 - 🔄 **Form Validation:** Client-side & server-side, error messages chi tiết
-- 🔄 **Export báo cáo Excel/PDF:** Đã có Excel, làm tiếp PDF
-- 🔄 **Lưu hồ sơ bảo hành:** Cập nhật thông tin bảo hành
 
 ### ❌ Chưa bắt đầu (TODO)
 
@@ -53,6 +53,8 @@ Hệ thống Quản lý Tài sản là một ứng dụng web được phát tri
 | **Spring Data JPA** | 4.0.4     | ORM, quản lý database                   |
 | **PostgreSQL**      | 12+       | Database chính                          |
 | **Thymeleaf**       | 3.1+      | Template engine (Server-side rendering) |
+| **Apache POI**      | 5.2.3     | Thư viện xuất file Excel (XLSX)         |
+| **OpenPDF**         | 1.3.41    | Thư viện xuất file PDF định dạng chuẩn  |
 | **Bootstrap**       | 5.3.0     | CSS Framework (CDN)                     |
 | **Font Awesome**    | 6.4.0     | Icon library (CDN)                      |
 | **Maven**           | 3.8+      | Build tool                              |
