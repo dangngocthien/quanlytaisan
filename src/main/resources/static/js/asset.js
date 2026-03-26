@@ -932,3 +932,179 @@ function formatDate(dateString) {
   const options = { year: "numeric", month: "2-digit", day: "2-digit" };
   return new Date(dateString).toLocaleDateString("vi-VN", options);
 }
+
+// =====================================
+// WARRANTY MANAGER
+// =====================================
+class WarrantyManager {
+  constructor() {
+    this.modal = null;
+    this.currentAssetId = null;
+    this.init();
+  }
+
+  init() {
+    document.addEventListener("DOMContentLoaded", () => {
+      const modalEl = document.getElementById("warrantyModal");
+      if (modalEl) {
+        this.modal = new bootstrap.Modal(modalEl);
+      }
+      this.attachEventListeners();
+    });
+  }
+
+  attachEventListeners() {
+    document.body.addEventListener("click", (e) => {
+      const btn = e.target.closest(".btn-warranty-asset");
+      if (btn) {
+        this.currentAssetId = btn.getAttribute("data-asset-id");
+        this.openWarrantyModal();
+      }
+    });
+
+    const form = document.getElementById("warrantyForm");
+    if (form) {
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        this.handleSaveWarranty();
+      });
+    }
+  }
+
+  openWarrantyModal() {
+    if (!this.modal) return;
+
+    const listTab = document.getElementById("warranty-list-tab");
+    if (listTab) {
+      const tab = new bootstrap.Tab(listTab);
+      tab.show();
+    }
+
+    const form = document.getElementById("warrantyForm");
+    if (form) form.reset();
+    document.getElementById("warrantyAssetId").value = this.currentAssetId;
+
+    this.loadWarrantyRecords(this.currentAssetId);
+    this.modal.show();
+  }
+
+  loadWarrantyRecords(assetId) {
+    const tbody = document.getElementById("warrantyTableBody");
+    tbody.innerHTML =
+      "<tr><td colspan='5' class='text-center'>Đang tải...</td></tr>";
+
+    fetch(contextPath + "api/assets/" + assetId + "/warranties")
+      .then((res) => res.json())
+      .then((data) => {
+        if (!data || data.length === 0) {
+          tbody.innerHTML =
+            "<tr><td colspan='5' class='text-center'>Chưa có dữ liệu bảo hành</td></tr>";
+          return;
+        }
+
+        tbody.innerHTML = "";
+        data.forEach((item) => {
+          const fileLink = item.fileDownloadUrl
+            ? `<a href="${item.fileDownloadUrl}" target="_blank"><i class="fas fa-paperclip"></i> ${item.attachmentFileName}</a>`
+            : "<i>Không có file</i>";
+
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${formatDate(item.createdAt)}</td>
+            <td>${item.providerCompany}<br><small>${item.contactPhone || ""}</small></td>
+            <td>${formatDate(item.startDate)} - ${formatDate(item.endDate)}</td>
+            <td>${fileLink}</td>
+            <td>
+              <button class="btn btn-sm btn-danger btn-delete-warranty" data-id="${item.id}">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        document.querySelectorAll(".btn-delete-warranty").forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            const id = e.currentTarget.getAttribute("data-id");
+            this.deleteWarranty(id);
+          });
+        });
+      })
+      .catch((err) => {
+        console.error(err);
+        tbody.innerHTML =
+          "<tr><td colspan='5' class='text-center text-danger'>Lỗi tải dữ liệu</td></tr>";
+      });
+  }
+
+  handleSaveWarranty() {
+    const assetId = document.getElementById("warrantyAssetId").value;
+    const formData = new FormData();
+    formData.append(
+      "providerCompany",
+      document.getElementById("warrantyProvider").value,
+    );
+    formData.append(
+      "contactPhone",
+      document.getElementById("warrantyPhone").value || "",
+    );
+    formData.append(
+      "startDate",
+      document.getElementById("warrantyStartDate").value || "",
+    );
+    formData.append(
+      "endDate",
+      document.getElementById("warrantyEndDate").value || "",
+    );
+    formData.append(
+      "notes",
+      document.getElementById("warrantyNotes").value || "",
+    );
+
+    const fileInput = document.getElementById("warrantyFile");
+    if (fileInput.files.length > 0) {
+      formData.append("file", fileInput.files[0]);
+    }
+
+    fetch(contextPath + "api/assets/" + assetId + "/warranties", {
+      method: "POST",
+      body: formData,
+    })
+      .then((res) => {
+        if (res.ok) {
+          alert("Thêm hồ sơ bảo hành thành công!");
+          this.loadWarrantyRecords(assetId);
+          document.getElementById("warrantyForm").reset();
+          document.getElementById("warranty-list-tab").click();
+        } else {
+          res.text().then((text) => alert("Lỗi: " + text));
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        alert("Lỗi kết nối khi lưu");
+      });
+  }
+
+  deleteWarranty(id) {
+    if (!confirm("Bạn có chắc muốn xóa hồ sơ bảo hành này?")) return;
+
+    fetch(contextPath + "api/warranties/" + id, {
+      method: "DELETE",
+    })
+      .then((res) => {
+        if (res.ok) {
+          alert("Xóa thành công!");
+          this.loadWarrantyRecords(this.currentAssetId);
+        } else {
+          alert("Lỗi khi xóa");
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        alert("Lỗi mạng khi xóa");
+      });
+  }
+}
+
+new WarrantyManager();

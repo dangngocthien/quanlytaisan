@@ -721,10 +721,10 @@ src/main/java/com/nhom18/quanlytaisan/
   - [ ] Modal xác nhận xóa
   - [ ] Validation form (Client-side & Server-side)
 
-- [ ] **Phase 3: Quản lý phân bổ & trạng thái**
-  - [ ] Tạo entity AssetTransfer
-  - [ ] Service & Controller cho chuyển tài sản
-  - [ ] Lịch sử điều chuyển
+- [x] **Phase 3: Quản lý phân bổ & trạng thái**
+  - [x] Tạo entity AssetTransfer
+  - [x] Service & Controller cho chuyển tài sản
+  - [x] Lịch sử điều chuyển
 
 - [x] **Phase 4: Tính khấu hao & Báo cáo**
   - [x] Entity DepreciationHistory
@@ -736,7 +736,7 @@ src/main/java/com/nhom18/quanlytaisan/
   - [x] QR Code sinh & in tem quét
   - [ ] Export Excel danh sách tài sản
   - [x] Dashboard thống kê (Tài sản theo Phòng ban)
-  - [ ] Báo cáo khấu hao
+  - [x] Báo cáo khấu hao
   - [ ] Thông báo (Email/SMS) bảo trì sắp tới
 
 ---

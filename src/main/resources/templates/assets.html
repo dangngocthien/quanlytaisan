@@ -40,11 +40,15 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto">
-              <li class="nav-item">
-                <a class="nav-link" href="/baocao/department-dashboard" th:href="@{/baocao/department-dashboard}">
-                  <i class="fas fa-chart-pie"></i> Dashboard
-                </a>
-              </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                href="/baocao/department-dashboard"
+                th:href="@{/baocao/department-dashboard}"
+              >
+                <i class="fas fa-chart-pie"></i> Dashboard
+              </a>
+            </li>
             <li class="nav-item">
               <a class="nav-link" href="/phong-ban" th:href="@{/phong-ban}">
                 <i class="fas fa-door-open"></i> Phòng ban
@@ -292,21 +296,19 @@
 
                       <!-- Thao tác -->
                       <td class="text-center">
-                        <!-- Nút hiển thị mã QR -->
-                        <button
-                          class="btn btn-sm btn-dark btn-show-qr"
-                          title="Hiển thị mã QR"
-                          th:data-asset-code="${asset.assetCode}"
-                          th:data-asset-name="${asset.name}"
-                        >
-                          <i class="fas fa-qrcode"></i>
-                        </button>
                         <button
                           class="btn btn-sm btn-info btn-history-asset"
                           title="Lịch sử điều chuyển"
                           th:data-asset-id="${asset.id}"
                         >
                           <i class="fas fa-history"></i>
+                        </button>
+                        <button
+                          class="btn btn-sm btn-secondary btn-warranty-asset"
+                          title="Hồ sơ bảo hành"
+                          th:data-asset-id="${asset.id}"
+                        >
+                          <i class="fas fa-file-contract"></i>
                         </button>
                         <button
                           class="btn btn-sm btn-primary btn-transfer-asset"
@@ -745,6 +747,144 @@
       </div>
     </div>
 
+    <!-- Modal bảo hành -->
+    <div
+      class="modal fade"
+      id="warrantyModal"
+      tabindex="-1"
+      aria-labelledby="warrantyModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header bg-secondary text-white">
+            <h5 class="modal-title" id="warrantyModalLabel">
+              <i class="fas fa-file-contract"></i> Hồ sơ bảo hành
+            </h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <ul class="nav nav-tabs mb-3" id="warrantyTabs" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button
+                  class="nav-link active"
+                  id="warranty-list-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#warranty-list"
+                  type="button"
+                  role="tab"
+                >
+                  Danh sách lịch sử
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button
+                  class="nav-link"
+                  id="warranty-add-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#warranty-add"
+                  type="button"
+                  role="tab"
+                >
+                  Thêm mới
+                </button>
+              </li>
+            </ul>
+            <div class="tab-content" id="warrantyTabsContent">
+              <div
+                class="tab-pane fade show active"
+                id="warranty-list"
+                role="tabpanel"
+              >
+                <div class="table-responsive">
+                  <table class="table table-bordered table-hover mt-3">
+                    <thead class="table-light">
+                      <tr>
+                        <th>Ngày tạo</th>
+                        <th>Đơn vị cung cấp</th>
+                        <th>Thời gian</th>
+                        <th>File đính kèm</th>
+                        <th>Thao tác</th>
+                      </tr>
+                    </thead>
+                    <tbody id="warrantyTableBody">
+                      <!-- Data populated by JS -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="tab-pane fade" id="warranty-add" role="tabpanel">
+                <form id="warrantyForm">
+                  <input type="hidden" id="warrantyAssetId" />
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      <label class="form-label">Đơn vị cung cấp/bảo hành</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="warrantyProvider"
+                        required
+                      />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label class="form-label">Điện thoại liên hệ</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="warrantyPhone"
+                      />
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      <label class="form-label">Ngày bắt đầu</label>
+                      <input
+                        type="date"
+                        class="form-control"
+                        id="warrantyStartDate"
+                      />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label class="form-label">Ngày kết thúc</label>
+                      <input
+                        type="date"
+                        class="form-control"
+                        id="warrantyEndDate"
+                      />
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Ghi chú/Nội dung</label>
+                    <textarea
+                      class="form-control"
+                      id="warrantyNotes"
+                      rows="2"
+                    ></textarea>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label"
+                      >File đính kèm (Biên bản, HD...)</label
+                    >
+                    <input class="form-control" type="file" id="warrantyFile" />
+                  </div>
+                  <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary">
+                      <i class="fas fa-save"></i> Lưu thông tin
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Bootstrap 5 JS Bundle từ CDN -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -768,7 +908,3 @@
     <script th:src="@{/js/asset.js}"></script>
   </body>
 </html>
-
-
-
-
