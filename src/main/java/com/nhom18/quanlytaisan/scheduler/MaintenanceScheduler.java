@@ -24,7 +24,7 @@ public class MaintenanceScheduler {
         this.notificationService = notificationService;
     }
 
-    @Scheduled(cron = "0 0 8 * * ?")
+    @Scheduled(cron = "0 03 15 * * ?")
     public void checkUpcomingMaintenance() {
         logger.info("--- Bắt đầu: Tiến trình kiểm tra bảo trì tài sản chạy ngầm định kỳ ---");
 

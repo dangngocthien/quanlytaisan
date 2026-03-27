@@ -11,5 +11,4 @@ public class QuanlytaisanApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(QuanlytaisanApplication.class, args);
 	}
-
 }

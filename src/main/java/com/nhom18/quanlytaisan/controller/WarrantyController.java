@@ -42,6 +42,12 @@ public class WarrantyController {
             @ModelAttribute WarrantyRequestDTO requestDTO,
             @RequestPart(value = "file", required = false) MultipartFile file) {
         try {
+            // Debug: Log dữ liệu nhận được
+            System.out.println("DEBUG: providerCompany = " + requestDTO.getProviderCompany());
+            System.out.println("DEBUG: contactPhone = " + requestDTO.getContactPhone());
+            System.out.println("DEBUG: startDate = " + requestDTO.getStartDate());
+            System.out.println("DEBUG: endDate = " + requestDTO.getEndDate());
+            
             WarrantyRecordDTO createdWarranty = warrantyService.createWarranty(assetId, requestDTO, file);
             return new ResponseEntity<>(createdWarranty, HttpStatus.CREATED);
         } catch (Exception e) {

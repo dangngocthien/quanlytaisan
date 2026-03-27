@@ -260,7 +260,7 @@
                       <th width="12%">Mã TS</th>
                       <th width="18%">Tên TS</th>
                       <th width="12%">Loại TS</th>
-                      <th width="15%">Giá trị hiện tại</th>
+                      <th width="15%" class="text-end">Giá trị hiện tại</th>
                       <th width="12%">Trạng thái</th>
                       <th width="18%">Phòng ban quản lý</th>
                       <th width="8%" class="text-center">Thao tác</th>
@@ -295,7 +295,7 @@
                       <!-- Giá trị hiện tại -->
                       <td class="text-end">
                         <span
-                          th:text="${#numbers.formatDecimal(asset.currentValue, 1, 'COMMA', 2, 'POINT')}"
+                          th:text="${#numbers.formatInteger(asset.currentValue, 1, 'COMMA')}"
                         ></span>
                         đ
                       </td>
@@ -887,7 +887,7 @@
                       <input
                         type="text"
                         class="form-control"
-                        id="warrantyProvider"
+                        id="newWarrantyProvider"
                         required
                       />
                     </div>

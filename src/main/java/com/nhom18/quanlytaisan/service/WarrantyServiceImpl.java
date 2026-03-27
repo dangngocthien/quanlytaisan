@@ -52,6 +52,12 @@ public class WarrantyServiceImpl implements WarrantyService {
             throw new RuntimeException("Tài sản đã thanh lý, không thể cập nhật thêm hồ sơ bảo hành!");
         }
 
+        // Debug: Log dữ liệu DTO
+        System.out.println("WarrantyService: providerCompany = " + requestDTO.getProviderCompany());
+        System.out.println("WarrantyService: contactPhone = " + requestDTO.getContactPhone());
+        System.out.println("WarrantyService: startDate = " + requestDTO.getStartDate());
+        System.out.println("WarrantyService: endDate = " + requestDTO.getEndDate());
+
         WarrantyRecord record = new WarrantyRecord();
         record.setAsset(asset);
         record.setProviderCompany(requestDTO.getProviderCompany());

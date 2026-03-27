@@ -1037,7 +1037,7 @@ class WarrantyManager {
           const tr = document.createElement("tr");
           tr.innerHTML = `
             <td>${formatDate(item.createdAt)}</td>
-            <td>${item.providerCompany}<br><small>${item.contactPhone || ""}</small></td>
+            <td>${item.providerCompany || "Chưa cập nhật"}<br><small>${item.contactPhone || ""}</small></td>
             <td>${formatDate(item.startDate)} - ${formatDate(item.endDate)}</td>
             <td>${fileLink}</td>
             <td>
@@ -1065,22 +1065,53 @@ class WarrantyManager {
 
   handleSaveWarranty() {
     const assetId = document.getElementById("warrantyAssetId").value;
-    const formData = new FormData();
-    formData.append(
-      "providerCompany",
-      document.getElementById("warrantyProvider").value,
+    const providerElement = document.getElementById("newWarrantyProvider");
+    const phoneElement = document.getElementById("warrantyPhone");
+    const startDateElement = document.getElementById("warrantyStartDate");
+    const endDateElement = document.getElementById("warrantyEndDate");
+
+    // Debug chi tiết
+    console.log("ELEMENTS CHECK:");
+    console.log("providerElement exists:", !!providerElement);
+    console.log(
+      "providerElement.value:",
+      providerElement ? providerElement.value : "NULL",
     );
+    console.log(
+      "phoneElement.value:",
+      phoneElement ? phoneElement.value : "NULL",
+    );
+    console.log(
+      "startDateElement.value:",
+      startDateElement ? startDateElement.value : "NULL",
+    );
+    console.log(
+      "endDateElement.value:",
+      endDateElement ? endDateElement.value : "NULL",
+    );
+
+    const providerCompanyValue = providerElement ? providerElement.value : "";
+
+    console.log("DEBUG: assetId =", assetId);
+    console.log("DEBUG: providerCompany =", providerCompanyValue);
+    console.log(
+      "DEBUG: contactPhone =",
+      phoneElement ? phoneElement.value : "",
+    );
+
+    const formData = new FormData();
+    formData.append("providerCompany", providerCompanyValue);
     formData.append(
       "contactPhone",
-      document.getElementById("warrantyPhone").value || "",
+      phoneElement ? phoneElement.value || "" : "",
     );
     formData.append(
       "startDate",
-      document.getElementById("warrantyStartDate").value || "",
+      startDateElement ? startDateElement.value || "" : "",
     );
     formData.append(
       "endDate",
-      document.getElementById("warrantyEndDate").value || "",
+      endDateElement ? endDateElement.value || "" : "",
     );
     formData.append(
       "notes",
@@ -1088,7 +1119,7 @@ class WarrantyManager {
     );
 
     const fileInput = document.getElementById("warrantyFile");
-    if (fileInput.files.length > 0) {
+    if (fileInput && fileInput.files.length > 0) {
       formData.append("file", fileInput.files[0]);
     }
 
