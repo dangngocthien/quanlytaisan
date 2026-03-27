@@ -369,6 +369,20 @@ class AssetManager {
       return false;
     }
 
+    // Custom Validation: Ngày sử dụng phải sau hoặc bằng ngày mua
+    const purchaseDateStr = document.getElementById("purchaseDate").value;
+    const usageStartDateStr = document.getElementById("usageStartDate").value;
+
+    if (purchaseDateStr && usageStartDateStr) {
+      const purchaseDate = new Date(purchaseDateStr);
+      const usageStartDate = new Date(usageStartDateStr);
+
+      if (usageStartDate < purchaseDate) {
+        this.showError("Ngày sử dụng không được trước ngày mua.");
+        return false;
+      }
+    }
+
     // Form is valid - all required fields are filled and correct format
     return true;
   }
@@ -483,14 +497,19 @@ class AssetManager {
       qrcodeDisplay.appendChild(qrWrapper);
 
       // Chỉnh thông số lưới và cấp độ sửa lỗi
-      new QRCode(qrWrapper, {
-        text: assetCode,
-        width: 200,
-        height: 200,
-        colorDark: "#000000",
-        colorLight: "#ffffff",
-        correctLevel: QRCode.CorrectLevel.M,
-      });
+      try {
+        new QRCode(qrWrapper, {
+          text: assetCode,
+          width: 200,
+          height: 200,
+          colorDark: "#000000",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.L, // Thay đổi từ M sang L để hỗ trợ chuỗi dài hơn
+        });
+      } catch (err) {
+        console.error("Lỗi tạo mã QR:", err);
+        qrcodeDisplay.innerHTML = `<div class="text-danger mt-3"><i class="fas fa-exclamation-circle"></i> Không thể tạo mã QR cho dữ liệu này (Mã quá dài hoặc chứa ký tự đặc biệt).</div>`;
+      }
     }
   }
 

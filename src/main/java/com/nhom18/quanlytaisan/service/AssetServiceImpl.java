@@ -57,6 +57,13 @@ public class AssetServiceImpl implements AssetService {
             throw new RuntimeException("Asset code already exists: " + assetDTO.getAssetCode());
         }
 
+        // Kiểm tra ngày sử dụng phải sau hoặc bằng ngày mua
+        if (assetDTO.getPurchaseDate() != null && assetDTO.getUsageStartDate() != null) {
+            if (assetDTO.getUsageStartDate().isBefore(assetDTO.getPurchaseDate())) {
+                throw new IllegalArgumentException("Ngày sử dụng không được trước ngày mua.");
+            }
+        }
+
         // Mapping DTO → Entity
         Asset asset = mapDTOToEntity(assetDTO);
 
@@ -71,6 +78,13 @@ public class AssetServiceImpl implements AssetService {
     public AssetDTO update(Long id, AssetDTO assetDTO) {
         Asset asset = assetRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Asset not found with id: " + id));
+
+        // Kiểm tra ngày sử dụng phải sau hoặc bằng ngày mua
+        if (assetDTO.getPurchaseDate() != null && assetDTO.getUsageStartDate() != null) {
+            if (assetDTO.getUsageStartDate().isBefore(assetDTO.getPurchaseDate())) {
+                throw new IllegalArgumentException("Ngày sử dụng không được trước ngày mua.");
+            }
+        }
 
         // Cập nhật dữ liệu cơ bản
         asset.setName(assetDTO.getName());
