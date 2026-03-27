@@ -60,6 +60,13 @@ public class AssetTransferServiceImpl implements AssetTransferService {
         Asset asset = assetRepository.findById(dto.getAssetId())
                 .orElseThrow(() -> new RuntimeException("Tài sản không tồn tại với ID: " + dto.getAssetId()));
 
+        // Kiểm tra ngày điều chuyển phải sau hoặc bằng ngày sử dụng của tài sản
+        if (dto.getTransferDate() != null && asset.getUsageStartDate() != null) {
+            if (dto.getTransferDate().isBefore(asset.getUsageStartDate())) {
+                throw new IllegalArgumentException("Ngày điều chuyển không được trước ngày sử dụng của tài sản (ngày " + asset.getUsageStartDate() + ").");
+            }
+        }
+
         Department fromDept = dto.getFromDepartmentId() != null
                 ? departmentRepository.findById(dto.getFromDepartmentId()).orElse(null)
                 : null;

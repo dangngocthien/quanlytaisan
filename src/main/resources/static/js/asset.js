@@ -826,8 +826,11 @@ class AssetManager {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     })
-      .then((res) => {
-        if (!res.ok) throw new Error("Chuyển tài sản thất bại");
+      .then(async (res) => {
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.message || "Chuyển tài sản thất bại");
+        }
         return res.json();
       })
       .then((data) => {
