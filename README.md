@@ -23,18 +23,18 @@
 
 ## 🛠️ Công nghệ sử dụng
 
-| Thành phần       | Phiên bản | Mục đích                  |
-|------------------|-----------|---------------------------|
-| Java             | 17 LTS    | Ngôn ngữ lập trình        |
-| Spring Boot      | 4.0.4     | Framework web             |
-| Spring Data JPA  | 4.0.4     | ORM, quản lý database     |
-| PostgreSQL       | 12+       | Database                  |
-| Thymeleaf        | 3.1+      | Server-side templating    |
-| Apache POI       | 5.2.3     | Xuất Excel                |
-| OpenPDF          | 1.3.41    | Xuất PDF                  |
-| Bootstrap        | 5.3.0     | CSS Framework (CDN)       |
-| Chart.js         | 3.9.1     | Biểu đồ trực quan (CDN)   |
-| Maven            | 3.8+      | Build tool                |
+| Thành phần      | Phiên bản | Mục đích                |
+| --------------- | --------- | ----------------------- |
+| Java            | 17 LTS    | Ngôn ngữ lập trình      |
+| Spring Boot     | 4.0.4     | Framework web           |
+| Spring Data JPA | 4.0.4     | ORM, quản lý database   |
+| PostgreSQL      | 12+       | Database                |
+| Thymeleaf       | 3.1+      | Server-side templating  |
+| Apache POI      | 5.2.3     | Xuất Excel              |
+| OpenPDF         | 1.3.41    | Xuất PDF                |
+| Bootstrap       | 5.3.0     | CSS Framework (CDN)     |
+| Chart.js        | 3.9.1     | Biểu đồ trực quan (CDN) |
+| Maven           | 3.8+      | Build tool              |
 
 ---
 
@@ -142,7 +142,7 @@ GET    /api/reports/valuation         - Báo cáo định giá danh mục
 
 ### Quản lý Tài sản (`/tai-san`)
 
-1. Click "Thêm tài sản" 
+1. Click "Thêm tài sản"
 2. Điền: mã tài sản, tên, giá, loại, phòng ban
 3. Lưu → Tài sản được tạo
 4. Điều chuyển: Click "Điều chuyển" → Chọn phòng đích → Lưu lịch sử
@@ -202,13 +202,13 @@ src/main/
 
 ## 🎯 Trạng thái phát triển
 
-| Phase | Tính năng | Status |
-|-------|----------|--------|
-| 1 | Core CRUD, Spring Boot, PostgreSQL | ✅ |
-| 2 | UI Bootstrap, Thymeleaf, Asset management | ✅ |
-| 3 | Asset Transfer, History tracking | ✅ |
-| 4 | Dashboard, Reports, Depreciation | ✅ |
-| 5 | QR Code, QR Scanner, In tem, Bảo hành | ✅ |
+| Phase | Tính năng                                 | Status |
+| ----- | ----------------------------------------- | ------ |
+| 1     | Core CRUD, Spring Boot, PostgreSQL        | ✅     |
+| 2     | UI Bootstrap, Thymeleaf, Asset management | ✅     |
+| 3     | Asset Transfer, History tracking          | ✅     |
+| 4     | Dashboard, Reports, Depreciation          | ✅     |
+| 5     | QR Code, QR Scanner, In tem, Bảo hành     | ✅     |
 
 ---
 
@@ -262,6 +262,8 @@ MIT License - Xem file LICENSE để chi tiết
 
    ```bash
    git checkout -b feature/xxx
+   ```
+
 ````
 
 2. **Phát triển bao gồm:**
@@ -293,7 +295,7 @@ MIT License - Xem file LICENSE để chi tiết
 
 ### Lỗi: "java.net.SocketTimeoutException: Receive timed out"
 
-**Nguyên nhân:** PostgreSQL không kết nối được  
+**Nguyên nhân:** PostgreSQL không kết nối được
 **Giải pháp:**
 
 - Kiểm tra PostgreSQL đã chạy: `pg_isready`
@@ -302,7 +304,7 @@ MIT License - Xem file LICENSE để chi tiết
 
 ### Lỗi: "Table already exists"
 
-**Nguyên nhân:** Schema đã tồn tại từ lần chạy trước  
+**Nguyên nhân:** Schema đã tồn tại từ lần chạy trước
 **Giải pháp:**
 
 ```sql
@@ -351,6 +353,7 @@ Dự án này là tài sản của [nhóm18]. Cấm sao chép, sử dụng cho m
 
 ---
 
-**Cập nhật lần cuối:** 24/03/2026  
-**Tác giả:** Team Lead / Product Manager  
+**Cập nhật lần cuối:** 24/03/2026
+**Tác giả:** Team Lead / Product Manager
 **Phiên bản:** 1.0.0
+````
